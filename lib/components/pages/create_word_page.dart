@@ -1,20 +1,70 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:estdict/domain/word_form.dart';
 import 'package:estdict/domain/word_type.dart';
 import 'package:flutter/material.dart';
 
 const padding = EdgeInsets.only(left: 18, right: 18);
 
-class CreateWordPage extends StatelessWidget {
-  final WordType wordType;
+class EditableForm {
+  final WordFormType formType;
+  String value;
 
-  const CreateWordPage({Key? key, required this.wordType}) : super(key: key);
+  EditableForm(this.formType, [this.value = ""]);
+
+  Map<String, dynamic> toJson() => {
+        "formType": formType.toString(),
+        "value": value,
+      };
+}
+
+class EditableWord {
+  final WordType wordType;
+  List<EditableForm> forms = [];
+  List<String> usages = [];
+
+  EditableWord(this.wordType);
+
+  String formValue(WordFormType wordFormType) {
+    var value = _findForm(wordFormType)?.value;
+    return value != null ? value : "";
+  }
+
+  void editFormValue(WordFormType wordFormType, String newValue) {
+    var form = _findForm(wordFormType);
+    if (form == null) {
+      form = EditableForm(wordFormType);
+      forms.add(form);
+    }
+    form.value = newValue;
+  }
+
+  EditableForm? _findForm(WordFormType wordFormType) {
+    return forms.firstWhereIndexedOrNull(
+        (i, element) => element.formType == wordFormType);
+  }
+
+  Map<String, dynamic> toJson() => {
+        "wordType": wordType.toString(),
+        "usages": usages,
+        "forms": forms.map((f) => f.toJson()).toList()
+      };
+}
+
+class CreateWordPage extends StatelessWidget {
+  final EditableWord word;
+
+  CreateWordPage({Key? key, required WordType wordType})
+      : word = EditableWord(wordType),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var typeFormsByLanguages = wordTypesForms[this.wordType];
+    var typeFormsByLanguages = wordTypesForms[this.word.wordType];
     if (typeFormsByLanguages == null) {
       throw StateError(
-          "Type Forms aren't configured for " + this.wordType.toString());
+          "Type Forms aren't configured for " + this.word.wordType.toString());
     }
 
     return Scaffold(
@@ -51,13 +101,16 @@ class CreateWordPage extends StatelessWidget {
                         ),
                         ...entry.value.map((formType) => Container(
                               margin: EdgeInsets.symmetric(vertical: 4.0),
-                              child: TextField(
+                              child: TextFormField(
+                                  initialValue: this.word.formValue(formType),
+                                  onChanged: (value) =>
+                                      this.word.editFormValue(formType, value),
                                   decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 2.0, horizontal: 8.0),
-                                border: OutlineInputBorder(),
-                                labelText: formType.toString(),
-                              )),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 2.0, horizontal: 8.0),
+                                    border: OutlineInputBorder(),
+                                    labelText: formType.toString(),
+                                  )),
                             ))
                       ],
                     )),
@@ -67,7 +120,9 @@ class CreateWordPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ElevatedButton(onPressed: () => {}, child: Text("Create"))
+                    ElevatedButton(
+                        onPressed: () => print(jsonEncode(this.word.toJson())),
+                        child: Text("Create"))
                   ],
                 )
               ],
@@ -79,7 +134,7 @@ class CreateWordPage extends StatelessWidget {
   }
 
   get title {
-    var wordTypeName = translateWordType(this.wordType);
+    var wordTypeName = translateWordType(this.word.wordType);
     return "Create " + wordTypeName;
   }
 }
