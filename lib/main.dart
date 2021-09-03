@@ -26,7 +26,14 @@ class EstDictionary extends StatelessWidget {
           textTheme: textTheme,
           bottomNavigationBarTheme: Theme.of(context)
               .bottomNavigationBarTheme
-              .copyWith(backgroundColor: primaryColor)),
+              .copyWith(backgroundColor: primaryColor),
+
+          // TODO: harmonize themes
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0)))))),
       darkTheme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: darken(primaryColor, 60),
@@ -35,7 +42,12 @@ class EstDictionary extends StatelessWidget {
           cardColor: darken(primaryColor, 65),
           bottomNavigationBarTheme: Theme.of(context)
               .bottomNavigationBarTheme
-              .copyWith(backgroundColor: darken(primaryColor, 60))),
+              .copyWith(backgroundColor: darken(primaryColor, 60)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0)))))),
       themeMode: ThemeMode.system,
       home: HomePage(),
     );
