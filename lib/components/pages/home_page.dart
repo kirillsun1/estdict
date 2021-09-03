@@ -15,7 +15,7 @@ final List<Word> words = [
   Word(WordType.VERB, [
     WordForm(WordFormType.EST_MA_INF, "tegema"),
     WordForm(WordFormType.RUS_INF, "делать"),
-  ]),
+  ])
 ];
 
 class HomePage extends StatelessWidget {
@@ -31,11 +31,11 @@ class HomePage extends StatelessWidget {
             ),
             createWelcomeBar(),
             SizedBox(
-              height: MediaQuery.of(context).padding.top,
+              height: 20,
             ),
             createNewWordBar(),
             SizedBox(
-              height: MediaQuery.of(context).padding.top,
+              height: 10,
             ),
             createLastAddedWords(words)
           ],
@@ -72,7 +72,7 @@ Widget createWelcomeBar() {
 
 Widget createLastAddedWords(List<Word> words) {
   return Padding(
-      padding: const EdgeInsets.only(left: 3, right: 3),
+      padding: const EdgeInsets.only(left: 0, right: 0),
       child: Row(
         children: [
           Expanded(
@@ -81,7 +81,7 @@ Widget createLastAddedWords(List<Word> words) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  padding: const EdgeInsets.only(left: 18, right: 18),
                   child: Text(
                     'Here is what you learned previously:',
                     textAlign: TextAlign.left,
@@ -102,6 +102,7 @@ Widget createLastAddedWords(List<Word> words) {
 }
 
 Widget createNewWordBar() {
+  var wordTypes = WordType.values;
   return Padding(
       padding: const EdgeInsets.only(left: 18, right: 18),
       child: Row(
@@ -120,23 +121,24 @@ Widget createNewWordBar() {
               ),
               SizedBox(
                 height: 60,
-                child: ListView(
+                child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    Chip(label: Text('Noun')),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Chip(label: Text('Verb')),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Chip(label: Text('Adjective'))
-                  ],
+                  separatorBuilder: (context, index) => SizedBox(
+                    width: 5,
+                  ),
+                  itemCount: wordTypes.length,
+                  itemBuilder: (context, index) => ActionChip(
+                      label: Text(translateWordType(wordTypes[index])),
+                      onPressed: () =>
+                          openWordCreationDialog(wordTypes[index])),
                 ),
               )
             ],
           ))
         ],
       ));
+}
+
+void openWordCreationDialog(WordType wordType) {
+  print("hello " + wordType.toString());
 }

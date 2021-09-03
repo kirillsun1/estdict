@@ -18,19 +18,24 @@ class EstDictionary extends StatelessWidget {
     return MaterialApp(
       title: 'EST Dictionary',
       theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: primaryColor,
-        accentColor: secondaryColor,
-        primarySwatch: Colors.deepOrange,
-        cardColor: lighten(secondaryColor),
-        textTheme: textTheme,
-      ),
+          brightness: Brightness.light,
+          primaryColor: primaryColor,
+          accentColor: secondaryColor,
+          primarySwatch: Colors.deepOrange,
+          cardColor: lighten(secondaryColor),
+          textTheme: textTheme,
+          bottomNavigationBarTheme: Theme.of(context)
+              .bottomNavigationBarTheme
+              .copyWith(backgroundColor: primaryColor)),
       darkTheme: ThemeData(
           brightness: Brightness.dark,
-          primaryColor: darken(primaryColor, darkModeModifiers[0]),
-          accentColor: darken(secondaryColor, darkModeModifiers[0]),
+          primaryColor: darken(primaryColor, 60),
+          accentColor: darken(secondaryColor, 30),
           primarySwatch: Colors.deepOrange,
-          cardColor: darken(primaryColor, darkModeModifiers[1])),
+          cardColor: darken(primaryColor, 65),
+          bottomNavigationBarTheme: Theme.of(context)
+              .bottomNavigationBarTheme
+              .copyWith(backgroundColor: darken(primaryColor, 60))),
       themeMode: ThemeMode.system,
       home: HomePage(),
     );
