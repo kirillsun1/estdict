@@ -1,23 +1,6 @@
 import 'package:collection/collection.dart';
-
-enum WordType {
-  NOUN,
-  ADJECTIVE,
-  VERB
-}
-
-String translateWordType(WordType wordType) {
-  switch (wordType) {
-    case WordType.NOUN:
-      return "Noun";
-
-    case WordType.ADJECTIVE:
-      return "Adjective";
-
-    case WordType.VERB:
-      return "Verb";
-  }
-}
+import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/domain/word_type.dart';
 
 class Word {
   final WordType wordType;
@@ -47,22 +30,9 @@ class Word {
   }
 }
 
-enum WordFormType {
-  EST_NIMETAV,
-  EST_MA_INF,
-  RUS_INF,
-}
-
-class WordForm {
-  final WordFormType formType;
-  final String value;
-
-  WordForm(this.formType, this.value);
-}
-
 WordFormType _getMainEstonianForm(WordType wordType) {
   if (wordType == WordType.NOUN || wordType == WordType.ADJECTIVE) {
-    return WordFormType.EST_NIMETAV;
+    return WordFormType.EST_SINGULAR_FIRST;
   }
   if (wordType == WordType.VERB) {
     return WordFormType.EST_MA_INF;

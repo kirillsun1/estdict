@@ -2,15 +2,17 @@ import 'package:estdict/components/card/word_overview.dart';
 import 'package:estdict/components/layout/background.dart';
 import 'package:estdict/components/pages/create_word_page.dart';
 import 'package:estdict/domain/word.dart';
+import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/domain/word_type.dart';
 import 'package:flutter/material.dart';
 
 final List<Word> words = [
   Word(WordType.NOUN, [
-    WordForm(WordFormType.EST_NIMETAV, "kasutama"),
-    WordForm(WordFormType.RUS_INF, "юзать"),
+    WordForm(WordFormType.EST_SINGULAR_FIRST, "mäng"),
+    WordForm(WordFormType.RUS_INF, "игра"),
   ]),
   Word(WordType.ADJECTIVE, [
-    WordForm(WordFormType.EST_NIMETAV, "ilus"),
+    WordForm(WordFormType.EST_SINGULAR_FIRST, "ilus"),
     WordForm(WordFormType.RUS_INF, "красивый"),
   ]),
   Word(WordType.VERB, [

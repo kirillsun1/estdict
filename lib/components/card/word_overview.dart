@@ -1,4 +1,5 @@
 import 'package:estdict/domain/word.dart';
+import 'package:estdict/domain/word_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
