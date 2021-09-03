@@ -22,35 +22,49 @@ enum WordFormType {
   RUS_INF,
 }
 
+enum Language { EST, RUS }
+
 const wordTypesForms = {
-  WordType.NOUN: [
-    WordFormType.EST_SINGULAR_FIRST,
-    WordFormType.EST_SINGULAR_SECOND,
-    WordFormType.EST_SINGULAR_THIRD,
-    WordFormType.EST_PLURAL_FIRST,
-    WordFormType.EST_PLURAL_SECOND,
-    WordFormType.EST_PLURAL_THIRD,
-    WordFormType.RUS_INF,
-  ],
-  WordType.ADJECTIVE: [
-    WordFormType.EST_SINGULAR_FIRST,
-    WordFormType.EST_SINGULAR_SECOND,
-    WordFormType.EST_SINGULAR_THIRD,
-    WordFormType.EST_PLURAL_FIRST,
-    WordFormType.EST_PLURAL_SECOND,
-    WordFormType.EST_PLURAL_THIRD,
-    WordFormType.RUS_INF,
-  ],
-  WordType.VERB: [
-    WordFormType.EST_MA_INF,
-    WordFormType.EST_DA_INF,
-    WordFormType.EST_PRESENT_FIRST,
-    WordFormType.EST_PAST_FIRST,
-    WordFormType.EST_NUD,
-    WordFormType.EST_TAKSE,
-    WordFormType.EST_TUD,
-    WordFormType.RUS_INF,
-  ],
+  WordType.NOUN: {
+    Language.EST: [
+      WordFormType.EST_SINGULAR_FIRST,
+      WordFormType.EST_SINGULAR_SECOND,
+      WordFormType.EST_SINGULAR_THIRD,
+      WordFormType.EST_PLURAL_FIRST,
+      WordFormType.EST_PLURAL_SECOND,
+      WordFormType.EST_PLURAL_THIRD
+    ],
+    Language.RUS: [
+      WordFormType.RUS_INF,
+    ]
+  },
+  WordType.ADJECTIVE: {
+    Language.EST: [
+      WordFormType.EST_SINGULAR_FIRST,
+      WordFormType.EST_SINGULAR_SECOND,
+      WordFormType.EST_SINGULAR_THIRD,
+      WordFormType.EST_PLURAL_FIRST,
+      WordFormType.EST_PLURAL_SECOND,
+      WordFormType.EST_PLURAL_THIRD
+    ],
+    Language.RUS: [
+      WordFormType.RUS_INF,
+    ],
+  },
+  WordType.VERB: {
+    Language.EST: [
+      WordFormType.EST_MA_INF,
+      WordFormType.EST_DA_INF,
+      WordFormType.EST_PRESENT_FIRST,
+      WordFormType.EST_PAST_FIRST,
+      WordFormType.EST_NUD,
+      WordFormType.EST_TAKSE,
+      WordFormType.EST_TUD
+    ],
+    Language.RUS: [
+      WordFormType.RUS_INF,
+    ]
+  }
 };
 
 class WordForm {

@@ -18,8 +18,8 @@ class _CreateWordPageState extends State<CreateWordPage> {
 
   @override
   Widget build(BuildContext context) {
-    var wordTypesForm = wordTypesForms[this.widget.wordType];
-    if (wordTypesForm == null) {
+    var typeFormsByLanguages = wordTypesForms[this.widget.wordType];
+    if (typeFormsByLanguages == null) {
       throw StateError("Type Forms aren't configured for " +
           this.widget.wordType.toString());
     }
@@ -47,10 +47,19 @@ class _CreateWordPageState extends State<CreateWordPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  ...wordTypesForm.map((e) => TextFormField(
-                        decoration: InputDecoration(
-                          labelText: e.toString(),
-                        ),
+                  ...typeFormsByLanguages.entries.map((entry) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(entry.key.toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          ...entry.value.map((formType) => TextFormField(
+                                  decoration: InputDecoration(
+                                labelText: formType.toString(),
+                              )))
+                        ],
                       ))
                 ],
               ),
