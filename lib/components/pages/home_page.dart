@@ -1,5 +1,6 @@
 import 'package:estdict/components/card/word_overview.dart';
 import 'package:estdict/components/layout/background.dart';
+import 'package:estdict/components/pages/create_word_page.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 
@@ -130,7 +131,7 @@ Widget createNewWordBar() {
                   itemBuilder: (context, index) => ActionChip(
                       label: Text(translateWordType(wordTypes[index])),
                       onPressed: () =>
-                          openWordCreationDialog(wordTypes[index])),
+                          openWordCreationDialog(context, wordTypes[index])),
                 ),
               )
             ],
@@ -139,6 +140,9 @@ Widget createNewWordBar() {
       ));
 }
 
-void openWordCreationDialog(WordType wordType) {
-  print("hello " + wordType.toString());
+void openWordCreationDialog(BuildContext context, WordType wordType) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CreateWordPage(wordType: wordType)));
 }
