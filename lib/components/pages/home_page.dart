@@ -9,15 +9,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final List<Word> words = [
   Word(WordType.NOUN, [
-    WordForm(WordFormType.EST_SINGULAR_FIRST, "mäng"),
+    WordForm(WordFormType.EST_INF, "mäng"),
     WordForm(WordFormType.RUS_INF, "игра"),
   ]),
   Word(WordType.ADJECTIVE, [
-    WordForm(WordFormType.EST_SINGULAR_FIRST, "ilus"),
+    WordForm(WordFormType.EST_INF, "ilus"),
     WordForm(WordFormType.RUS_INF, "красивый"),
   ]),
   Word(WordType.VERB, [
-    WordForm(WordFormType.EST_MA_INF, "tegema"),
+    WordForm(WordFormType.EST_INF, "tegema"),
     WordForm(WordFormType.RUS_INF, "делать"),
   ])
 ];

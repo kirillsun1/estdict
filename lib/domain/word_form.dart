@@ -1,8 +1,14 @@
 import 'package:estdict/domain/word_type.dart';
 
 enum WordFormType {
+  // Main forms. Might have different name depending on the word type.
+  EST_INF,
+  RUS_INF,
+  ENG_INF,
+
+  // Additional forms below:
+  //
   // for noun + adjective
-  EST_SINGULAR_FIRST,
   EST_SINGULAR_SECOND,
   EST_SINGULAR_THIRD,
   EST_PLURAL_FIRST,
@@ -10,24 +16,20 @@ enum WordFormType {
   EST_PLURAL_THIRD,
 
   // for verbs
-  EST_MA_INF,
   EST_DA_INF,
   EST_PRESENT_FIRST,
   EST_PAST_FIRST,
   EST_NUD,
   EST_TAKSE,
   EST_TUD,
-
-  // russian
-  RUS_INF,
 }
 
-enum Language { EST, RUS }
+enum Language { EST, RUS, ENG }
 
 const wordTypesForms = {
   WordType.NOUN: {
     Language.EST: [
-      WordFormType.EST_SINGULAR_FIRST,
+      WordFormType.EST_INF,
       WordFormType.EST_SINGULAR_SECOND,
       WordFormType.EST_SINGULAR_THIRD,
       WordFormType.EST_PLURAL_FIRST,
@@ -36,11 +38,14 @@ const wordTypesForms = {
     ],
     Language.RUS: [
       WordFormType.RUS_INF,
+    ],
+    Language.ENG: [
+      WordFormType.ENG_INF,
     ]
   },
   WordType.ADJECTIVE: {
     Language.EST: [
-      WordFormType.EST_SINGULAR_FIRST,
+      WordFormType.EST_INF,
       WordFormType.EST_SINGULAR_SECOND,
       WordFormType.EST_SINGULAR_THIRD,
       WordFormType.EST_PLURAL_FIRST,
@@ -50,10 +55,13 @@ const wordTypesForms = {
     Language.RUS: [
       WordFormType.RUS_INF,
     ],
+    Language.ENG: [
+      WordFormType.ENG_INF,
+    ]
   },
   WordType.VERB: {
     Language.EST: [
-      WordFormType.EST_MA_INF,
+      WordFormType.EST_INF,
       WordFormType.EST_DA_INF,
       WordFormType.EST_PRESENT_FIRST,
       WordFormType.EST_PAST_FIRST,
@@ -63,6 +71,9 @@ const wordTypesForms = {
     ],
     Language.RUS: [
       WordFormType.RUS_INF,
+    ],
+    Language.ENG: [
+      WordFormType.ENG_INF,
     ]
   }
 };
