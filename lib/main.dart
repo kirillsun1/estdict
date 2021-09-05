@@ -1,6 +1,7 @@
 import 'package:estdict/components/pages/home_page.dart';
 import 'package:estdict/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(EstDictionary());
@@ -49,6 +50,8 @@ class EstDictionary extends StatelessWidget {
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0)))))),
       themeMode: ThemeMode.system,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: HomePage(),
     );
   }

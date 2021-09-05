@@ -5,6 +5,7 @@ import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_form.dart';
 import 'package:estdict/domain/word_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final List<Word> words = [
   Word(WordType.NOUN, [
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).padding.top,
             ),
-            createWelcomeBar(),
+            createWelcomeBar(context),
             SizedBox(
               height: 20,
             ),
@@ -60,11 +61,11 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget createWelcomeBar() {
+Widget createWelcomeBar(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
     child: Text(
-      'Welcome to EST Dictionary',
+      AppLocalizations.of(context)!.homePageTitle,
       textAlign: TextAlign.left,
       style: TextStyle(
         fontWeight: FontWeight.bold,
