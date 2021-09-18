@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
+import 'package:estdict/domain/part_of_speech.dart';
 import 'package:estdict/domain/word_form.dart';
-import 'package:estdict/domain/word_type.dart';
 import 'package:flutter/material.dart';
 
 const padding = EdgeInsets.only(left: 18, right: 18);
@@ -12,19 +10,14 @@ class EditableForm {
   String value;
 
   EditableForm(this.formType, [this.value = ""]);
-
-  Map<String, dynamic> toJson() => {
-        "formType": formType.toString(),
-        "value": value,
-      };
 }
 
 class EditableWord {
-  final WordType wordType;
+  final PartOfSpeech partOfSpeech;
   List<EditableForm> forms = [];
   List<String> usages = [];
 
-  EditableWord(this.wordType);
+  EditableWord(this.partOfSpeech);
 
   String formValue(WordFormType wordFormType) {
     var value = _findForm(wordFormType)?.value;
@@ -44,32 +37,26 @@ class EditableWord {
     return forms.firstWhereIndexedOrNull(
         (i, element) => element.formType == wordFormType);
   }
-
-  Map<String, dynamic> toJson() => {
-        "wordType": wordType.toString(),
-        "usages": usages,
-        "forms": forms.map((f) => f.toJson()).toList()
-      };
 }
 
 class CreateWordPage extends StatelessWidget {
   final EditableWord word;
 
-  CreateWordPage({Key? key, required WordType wordType})
-      : word = EditableWord(wordType),
+  CreateWordPage({Key? key, required PartOfSpeech partOfSpeech})
+      : word = EditableWord(partOfSpeech),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var typeFormsByLanguages = wordTypesForms[this.word.wordType];
+    var typeFormsByLanguages = wordTypesForms[this.word.partOfSpeech];
     if (typeFormsByLanguages == null) {
       throw StateError(
-          "Type Forms aren't configured for " + this.word.wordType.toString());
+          "Type Forms aren't configured for " + this.word.partOfSpeech.toString());
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(this.title),
+        title: Text("Create " + translatePartOfSpeech(this.word.partOfSpeech)),
       ),
       body: ListView(
         children: [
@@ -88,32 +75,34 @@ class CreateWordPage extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                ...typeFormsByLanguages.entries.map((entry) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(entry.key.toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ...entry.value.map((formType) => Container(
-                              margin: EdgeInsets.symmetric(vertical: 4.0),
-                              child: TextFormField(
-                                  initialValue: this.word.formValue(formType),
-                                  onChanged: (value) =>
-                                      this.word.editFormValue(formType, value),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 2.0, horizontal: 8.0),
-                                    border: OutlineInputBorder(),
-                                    labelText: formType.toString(),
-                                  )),
-                            ))
-                      ],
-                    )),
+                for (var lang in typeFormsByLanguages.entries)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(lang.key.toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      for (var formType in lang.value)
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 4.0),
+                          child: TextFormField(
+                              initialValue: this.word.formValue(formType),
+                              onChanged: (value) =>
+                                  this.word.editFormValue(formType, value),
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 2.0, horizontal: 8.0),
+                                border: OutlineInputBorder(),
+                                labelText: formType.toString(),
+                              )),
+                        )
+                    ],
+                  ),
                 SizedBox(
                   height: 10,
                 ),
@@ -121,8 +110,7 @@ class CreateWordPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                        onPressed: () => print(jsonEncode(this.word.toJson())),
-                        child: Text("Create"))
+                        onPressed: () => print("hey"), child: Text("Create"))
                   ],
                 )
               ],
@@ -131,10 +119,5 @@ class CreateWordPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  get title {
-    var wordTypeName = translateWordType(this.word.wordType);
-    return "Create " + wordTypeName;
   }
 }

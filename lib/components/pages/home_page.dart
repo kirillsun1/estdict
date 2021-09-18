@@ -3,19 +3,19 @@ import 'package:estdict/components/layout/background.dart';
 import 'package:estdict/components/pages/create_word_page.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_form.dart';
-import 'package:estdict/domain/word_type.dart';
+import 'package:estdict/domain/part_of_speech.dart';
 import 'package:flutter/material.dart';
 
 final List<Word> words = [
-  Word(WordType.NOUN, [
+  Word(PartOfSpeech.NOUN, [
     WordForm(WordFormType.EST_INF, "mäng"),
     WordForm(WordFormType.RUS_INF, "игра"),
   ]),
-  Word(WordType.ADJECTIVE, [
+  Word(PartOfSpeech.ADJECTIVE, [
     WordForm(WordFormType.EST_INF, "ilus"),
     WordForm(WordFormType.RUS_INF, "красивый"),
   ]),
-  Word(WordType.VERB, [
+  Word(PartOfSpeech.VERB, [
     WordForm(WordFormType.EST_INF, "tegema"),
     WordForm(WordFormType.RUS_INF, "делать"),
   ])
@@ -106,7 +106,7 @@ Widget createLastAddedWords(List<Word> words) {
 }
 
 Widget createNewWordBar() {
-  var wordTypes = WordType.values;
+  var wordTypes = PartOfSpeech.values;
   return Padding(
       padding: const EdgeInsets.only(left: 18, right: 18),
       child: Row(
@@ -132,7 +132,7 @@ Widget createNewWordBar() {
                   ),
                   itemCount: wordTypes.length,
                   itemBuilder: (context, index) => ActionChip(
-                      label: Text(translateWordType(wordTypes[index])),
+                      label: Text(translatePartOfSpeech(wordTypes[index])),
                       onPressed: () =>
                           openWordCreationDialog(context, wordTypes[index])),
                 ),
@@ -143,9 +143,9 @@ Widget createNewWordBar() {
       ));
 }
 
-void openWordCreationDialog(BuildContext context, WordType wordType) {
+void openWordCreationDialog(BuildContext context, PartOfSpeech wordType) {
   Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => CreateWordPage(wordType: wordType)));
+          builder: (context) => CreateWordPage(partOfSpeech: wordType)));
 }

@@ -1,6 +1,6 @@
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_form.dart';
-import 'package:estdict/domain/word_type.dart';
+import 'package:estdict/domain/part_of_speech.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -39,7 +39,7 @@ class WordOverview extends StatelessWidget {
             ],
           ),
           Chip(
-            label: Text(translateWordType(this._word.wordType)),
+            label: Text(translatePartOfSpeech(this._word.partOfSpeech)),
           )
         ],
       ),

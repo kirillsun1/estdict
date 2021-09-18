@@ -1,4 +1,4 @@
-import 'package:estdict/domain/word_type.dart';
+import 'package:estdict/domain/part_of_speech.dart';
 
 enum WordFormType {
   // Main forms. Might have different name depending on the word type.
@@ -27,7 +27,7 @@ enum WordFormType {
 enum Language { EST, RUS, ENG }
 
 const wordTypesForms = {
-  WordType.NOUN: {
+  PartOfSpeech.NOUN: {
     Language.EST: [
       WordFormType.EST_INF,
       WordFormType.EST_SINGULAR_SECOND,
@@ -43,7 +43,7 @@ const wordTypesForms = {
       WordFormType.ENG_INF,
     ]
   },
-  WordType.ADJECTIVE: {
+  PartOfSpeech.ADJECTIVE: {
     Language.EST: [
       WordFormType.EST_INF,
       WordFormType.EST_SINGULAR_SECOND,
@@ -59,7 +59,7 @@ const wordTypesForms = {
       WordFormType.ENG_INF,
     ]
   },
-  WordType.VERB: {
+  PartOfSpeech.VERB: {
     Language.EST: [
       WordFormType.EST_INF,
       WordFormType.EST_DA_INF,
