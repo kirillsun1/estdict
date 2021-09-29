@@ -39,7 +39,7 @@ class WordOverview extends StatelessWidget {
             ],
           ),
           Chip(
-            label: Text(translatePartOfSpeech(this._word.partOfSpeech)),
+            label: Text(this._word.partOfSpeech.name),
           )
         ],
       ),

@@ -1,14 +1,13 @@
 enum PartOfSpeech { NOUN, ADJECTIVE, VERB }
 
-String translatePartOfSpeech(PartOfSpeech wordType) {
-  switch (wordType) {
-    case PartOfSpeech.NOUN:
-      return "Noun";
+const names = {
+  PartOfSpeech.NOUN: "Noun",
+  PartOfSpeech.ADJECTIVE: "Adjective",
+  PartOfSpeech.VERB: "Verb",
+};
 
-    case PartOfSpeech.ADJECTIVE:
-      return "Adjective";
-
-    case PartOfSpeech.VERB:
-      return "Verb";
+extension PartOfSpeechTranslations on PartOfSpeech {
+  String get name {
+    return names[this]!;
   }
 }

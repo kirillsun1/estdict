@@ -132,7 +132,7 @@ Widget createNewWordBar() {
                   ),
                   itemCount: wordTypes.length,
                   itemBuilder: (context, index) => ActionChip(
-                      label: Text(translatePartOfSpeech(wordTypes[index])),
+                      label: Text(wordTypes[index].name),
                       onPressed: () =>
                           openWordCreationDialog(context, wordTypes[index])),
                 ),

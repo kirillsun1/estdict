@@ -1,4 +1,9 @@
-import 'package:estdict/domain/part_of_speech.dart';
+class WordForm {
+  final WordFormType formType;
+  final String value;
+
+  WordForm(this.formType, this.value);
+}
 
 enum WordFormType {
   // Main forms. Might have different name depending on the word type.
@@ -24,63 +29,35 @@ enum WordFormType {
   EST_TUD,
 }
 
-enum Language { EST, RUS, ENG }
-
-const wordTypesForms = {
-  PartOfSpeech.NOUN: {
-    Language.EST: [
-      WordFormType.EST_INF,
-      WordFormType.EST_SINGULAR_SECOND,
-      WordFormType.EST_SINGULAR_THIRD,
-      WordFormType.EST_PLURAL_FIRST,
-      WordFormType.EST_PLURAL_SECOND,
-      WordFormType.EST_PLURAL_THIRD
-    ],
-    Language.RUS: [
-      WordFormType.RUS_INF,
-    ],
-    Language.ENG: [
-      WordFormType.ENG_INF,
-    ]
-  },
-  PartOfSpeech.ADJECTIVE: {
-    Language.EST: [
-      WordFormType.EST_INF,
-      WordFormType.EST_SINGULAR_SECOND,
-      WordFormType.EST_SINGULAR_THIRD,
-      WordFormType.EST_PLURAL_FIRST,
-      WordFormType.EST_PLURAL_SECOND,
-      WordFormType.EST_PLURAL_THIRD
-    ],
-    Language.RUS: [
-      WordFormType.RUS_INF,
-    ],
-    Language.ENG: [
-      WordFormType.ENG_INF,
-    ]
-  },
-  PartOfSpeech.VERB: {
-    Language.EST: [
-      WordFormType.EST_INF,
-      WordFormType.EST_DA_INF,
-      WordFormType.EST_PRESENT_FIRST,
-      WordFormType.EST_PAST_FIRST,
-      WordFormType.EST_NUD,
-      WordFormType.EST_TAKSE,
-      WordFormType.EST_TUD
-    ],
-    Language.RUS: [
-      WordFormType.RUS_INF,
-    ],
-    Language.ENG: [
-      WordFormType.ENG_INF,
-    ]
+extension WordFormTypeMetaAndTranslations on WordFormType {
+  String get name {
+    return _names[this]!;
   }
+
+  bool get isInfinitive {
+    return _infinitiveForms.contains(this);
+  }
+}
+
+const _names = {
+  WordFormType.EST_INF: "Infinitiiv",
+  WordFormType.RUS_INF: "Infinitiiv",
+  WordFormType.ENG_INF: "Infinitiiv",
+  WordFormType.EST_SINGULAR_SECOND: "Omastav (ainsus)",
+  WordFormType.EST_SINGULAR_THIRD: "Osastav (ainsus)",
+  WordFormType.EST_PLURAL_FIRST: "Infinitiiv (mitmus)",
+  WordFormType.EST_PLURAL_SECOND: "Omastav (mitmus)",
+  WordFormType.EST_PLURAL_THIRD: "Osastav (mitmus)",
+  WordFormType.EST_DA_INF: "da-vorm",
+  WordFormType.EST_PRESENT_FIRST: "?",
+  WordFormType.EST_PAST_FIRST: "past ?",
+  WordFormType.EST_NUD: "nud-vorm",
+  WordFormType.EST_TAKSE: "umbisikuline form (-takse)",
+  WordFormType.EST_TUD: "tud-vorm",
 };
 
-class WordForm {
-  final WordFormType formType;
-  final String value;
-
-  WordForm(this.formType, this.value);
-}
+const _infinitiveForms = [
+  WordFormType.ENG_INF,
+  WordFormType.RUS_INF,
+  WordFormType.ENG_INF
+];

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:estdict/domain/part_of_speech.dart';
 import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/domain/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
 
 const padding = EdgeInsets.only(left: 18, right: 18);
@@ -48,15 +49,9 @@ class CreateWordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var typeFormsByLanguages = wordTypesForms[this.word.partOfSpeech];
-    if (typeFormsByLanguages == null) {
-      throw StateError(
-          "Type Forms aren't configured for " + this.word.partOfSpeech.toString());
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create " + translatePartOfSpeech(this.word.partOfSpeech)),
+        title: Text("Create " + this.word.partOfSpeech.name),
       ),
       body: ListView(
         children: [
@@ -75,14 +70,14 @@ class CreateWordPage extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                for (var lang in typeFormsByLanguages.entries)
+                for (var lang in this.word.partOfSpeech.groupedForms.entries)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         height: 10,
                       ),
-                      Text(lang.key.toString(),
+                      Text(lang.key.name,
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       SizedBox(
                         height: 10,
@@ -98,7 +93,7 @@ class CreateWordPage extends StatelessWidget {
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 2.0, horizontal: 8.0),
                                 border: OutlineInputBorder(),
-                                labelText: formType.toString(),
+                                labelText: formType.name,
                               )),
                         )
                     ],
