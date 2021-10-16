@@ -37,11 +37,11 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            createNewWordBar(),
+            createLastAddedWords(words),
             SizedBox(
               height: 10,
             ),
-            createLastAddedWords(words)
+            createNewWordBar()
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

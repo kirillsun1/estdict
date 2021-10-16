@@ -64,40 +64,16 @@ class CreateWordPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Fill the required fields:',
+                  'Fill the forms of the word.',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                Text(
+                    'An infinitive of at least one language is required". You can optionally add additional forms.'),
                 SizedBox(
                   height: 10,
                 ),
-                for (var lang in this.word.partOfSpeech.groupedForms.entries)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(lang.key.name,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      for (var formType in lang.value)
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 4.0),
-                          child: TextFormField(
-                              initialValue: this.word.formValue(formType),
-                              onChanged: (value) =>
-                                  this.word.editFormValue(formType, value),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 2.0, horizontal: 8.0),
-                                border: OutlineInputBorder(),
-                                labelText: formType.name,
-                              )),
-                        )
-                    ],
-                  ),
+                for (var groupsForm in this.word.partOfSpeech.groupedForms)
+                  LanguageForms(group: groupsForm),
                 SizedBox(
                   height: 10,
                 ),
@@ -113,6 +89,59 @@ class CreateWordPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class LanguageForms extends StatelessWidget {
+  final FormsGroup group;
+
+  LanguageForms({Key? key, required this.group}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          group.name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 4.0),
+          child: TextFormField(
+              initialValue: "",
+              onChanged: (value) => {},
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+                border: OutlineInputBorder(),
+                labelText: group.infinitive.name,
+              )),
+        ),
+        if (group.optionalForms.isNotEmpty)
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 4.0),
+            child: DropdownButton<WordFormType>(
+              value: null,
+              hint: Text("Select a form to add"),
+              isExpanded: true,
+              items: group.optionalForms
+                  .map((element) => DropdownMenuItem(
+                        child: Text(element.name),
+                        value: element,
+                      ))
+                  .toList(),
+              onChanged: (value) => {},
+            ),
+          )
+      ],
     );
   }
 }

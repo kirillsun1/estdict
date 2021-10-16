@@ -57,7 +57,7 @@ const _names = {
 };
 
 const _infinitiveForms = [
-  WordFormType.ENG_INF,
+  WordFormType.EST_INF,
   WordFormType.RUS_INF,
   WordFormType.ENG_INF
 ];
