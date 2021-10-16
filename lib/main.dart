@@ -1,4 +1,4 @@
-import 'package:estdict/components/pages/home_page.dart';
+import 'package:estdict/app/home/home_page.dart';
 import 'package:estdict/utils/colors.dart';
 import 'package:flutter/material.dart';
 
