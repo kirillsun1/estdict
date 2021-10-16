@@ -1,6 +1,6 @@
 import 'package:estdict/app/word/word_overview.dart';
 import 'package:estdict/app/home/background.dart';
-import 'package:estdict/app/modifyword/create_word_page.dart';
+import 'package:estdict/app/modify_word/create_word_page.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_form.dart';
 import 'package:estdict/domain/part_of_speech.dart';

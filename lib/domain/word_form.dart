@@ -33,10 +33,6 @@ extension WordFormTypeMetaAndTranslations on WordFormType {
   String get name {
     return _names[this]!;
   }
-
-  bool get isInfinitive {
-    return _infinitiveForms.contains(this);
-  }
 }
 
 const _names = {
@@ -55,9 +51,3 @@ const _names = {
   WordFormType.EST_TAKSE: "umbisikuline form (-takse)",
   WordFormType.EST_TUD: "tud-vorm",
 };
-
-const _infinitiveForms = [
-  WordFormType.EST_INF,
-  WordFormType.RUS_INF,
-  WordFormType.ENG_INF
-];
