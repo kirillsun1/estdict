@@ -124,6 +124,7 @@ class FormValueField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+        key: Key("formValueField__$formType"),
         initialValue: value,
         onChanged: (value) => {onFormValueChanged(formType, value)},
         decoration: InputDecoration(
