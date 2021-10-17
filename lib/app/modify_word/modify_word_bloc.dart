@@ -53,7 +53,6 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
       }
     }
     modifiableUsages[indexToChange] = event.value;
-    print(modifiableUsages);
 
     emit(ModifyWordState(
         state.partOfSpeech, state.forms, List.unmodifiable(modifiableUsages)));

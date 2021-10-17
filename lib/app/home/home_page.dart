@@ -1,27 +1,27 @@
-import 'package:estdict/app/word/word_overview.dart';
 import 'package:estdict/app/home/background.dart';
+import 'package:estdict/app/home/home_page_bloc.dart';
 import 'package:estdict/app/modify_word/create_word_page.dart';
-import 'package:estdict/domain/word.dart';
-import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/app/word/word_overview.dart';
+import 'package:estdict/app/word/word_repository.dart';
 import 'package:estdict/domain/part_of_speech.dart';
 import 'package:flutter/material.dart';
-
-final List<Word> words = [
-  Word(PartOfSpeech.NOUN, [
-    WordForm(WordFormType.EST_INF, "mäng"),
-    WordForm(WordFormType.RUS_INF, "игра"),
-  ]),
-  Word(PartOfSpeech.ADJECTIVE, [
-    WordForm(WordFormType.EST_INF, "ilus"),
-    WordForm(WordFormType.RUS_INF, "красивый"),
-  ]),
-  Word(PartOfSpeech.VERB, [
-    WordForm(WordFormType.EST_INF, "tegema"),
-    WordForm(WordFormType.RUS_INF, "делать"),
-  ])
-];
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+        create: (context) =>
+            HomePageBloc(WordRepository())..add(WordsRequested()),
+        child: _HomePageView());
+  }
+}
+
+class _HomePageView extends StatelessWidget {
+  const _HomePageView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Background(
@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            createLastAddedWords(words),
+            LastAddedWords(),
             SizedBox(
               height: 10,
             ),
@@ -74,35 +74,57 @@ Widget createWelcomeBar() {
   );
 }
 
-Widget createLastAddedWords(List<Word> words) {
-  return Padding(
-      padding: const EdgeInsets.only(left: 0, right: 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+class LastAddedWords extends StatelessWidget {
+  const LastAddedWords({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomePageBloc, HomePageState>(
+        builder: (context, state) => Padding(
+            padding: const EdgeInsets.only(left: 0, right: 0),
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 18, right: 18),
-                  child: Text(
-                    'Here is what you learned previously:',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (state.loading)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18, right: 18),
+                          child: Text(
+                            'loading...',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      else ...[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18, right: 18),
+                          child: Text(
+                            'Here is what you learned previously:',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Column(
+                          children: [
+                            ...state.words
+                                .map((word) => WordOverview(word: word))
+                          ],
+                        )
+                      ]
+                    ],
                   ),
-                ),
-                SizedBox(height: 10),
-                Column(
-                  children: [...words.map((word) => WordOverview(word: word))],
                 )
               ],
-            ),
-          )
-        ],
-      ));
+            )));
+  }
 }
 
 Widget createNewWordBar() {
