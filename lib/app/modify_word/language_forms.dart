@@ -1,6 +1,7 @@
 import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/app/modify_word/text_field.dart';
+import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/word_form.dart';
 import 'package:estdict/domain/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
@@ -41,66 +42,53 @@ class LanguageFormsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 10,
+    return Section(title: group.name, children: [
+      Container(
+        margin: margin,
+        child: FormValueField(
+          formType: group.infinitive,
+          value: forms[group.infinitive],
+          onFormValueChanged: onFormValueChanged,
         ),
-        Text(
-          group.name,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Container(
-          margin: margin,
-          child: FormValueField(
-            formType: group.infinitive,
-            value: forms[group.infinitive],
-            onFormValueChanged: onFormValueChanged,
-          ),
-        ),
-        for (var formType in group.optionalForms)
-          if (isOptionalFormWithValue(formType))
-            Container(
-              margin: margin,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: FormValueField(
-                      formType: formType,
-                      value: forms[formType],
-                      onFormValueChanged: onFormValueChanged,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => {onFormValueChanged(formType, null)},
-                      icon: Icon(Icons.remove))
-                ],
-              ),
-            ),
-        if (optionalFormsLeft.isNotEmpty)
+      ),
+      for (var formType in group.optionalForms)
+        if (isOptionalFormWithValue(formType))
           Container(
             margin: margin,
-            child: DropdownButton<WordFormType>(
-              value: null,
-              hint: Text("Select a form to add"),
-              isExpanded: true,
-              items: optionalFormsLeft
-                  .map((element) => DropdownMenuItem(
-                        child: Text(element.name),
-                        value: element,
-                      ))
-                  .toList(),
-              onChanged: (value) => {
-                if (value != null) {onFormValueChanged(value, "")}
-              },
+            child: Row(
+              children: [
+                Expanded(
+                  child: FormValueField(
+                    formType: formType,
+                    value: forms[formType],
+                    onFormValueChanged: onFormValueChanged,
+                  ),
+                ),
+                IconButton(
+                    onPressed: () => {onFormValueChanged(formType, null)},
+                    icon: Icon(Icons.delete))
+              ],
             ),
-          )
-      ],
-    );
+          ),
+      if (optionalFormsLeft.isNotEmpty)
+        Container(
+          margin: margin,
+          child: DropdownButton<WordFormType>(
+            value: null,
+            hint: Text("Select a form to add"),
+            isExpanded: true,
+            items: optionalFormsLeft
+                .map((element) => DropdownMenuItem(
+                      child: Text(element.name),
+                      value: element,
+                    ))
+                .toList(),
+            onChanged: (value) => {
+              if (value != null) {onFormValueChanged(value, "")}
+            },
+          ),
+        )
+    ]);
   }
 
   bool isOptionalFormWithValue(WordFormType formType) =>

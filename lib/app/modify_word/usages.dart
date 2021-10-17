@@ -1,6 +1,7 @@
 import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/app/modify_word/text_field.dart';
+import 'package:estdict/components/section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,14 +31,7 @@ class _UsagesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(
-        height: 10,
-      ),
-      Text(
-        "Usages",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
+    return Section(title: "Usages", children: [
       for (var i = 0; i < usages.length; i++)
         if (usages[i] != null)
           Container(
@@ -53,7 +47,7 @@ class _UsagesView extends StatelessWidget {
                 ),
                 IconButton(
                     onPressed: () => {onUsageChanged(i, null)},
-                    icon: Icon(Icons.remove))
+                    icon: Icon(Icons.delete))
               ],
             ),
           ),

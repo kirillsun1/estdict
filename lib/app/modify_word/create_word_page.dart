@@ -1,6 +1,7 @@
 import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/app/modify_word/usages.dart';
+import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/part_of_speech.dart';
 import 'package:estdict/domain/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
@@ -54,23 +55,16 @@ class CreateWordView extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 18, right: 18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                child: Section(
+                  title: 'Fill the forms of the word.',
+                  subtitle:
+                      'An infinitive of at least one language is required. You can optionally add additional forms.',
                   children: [
-                    Text(
-                      'Fill the forms of the word.',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                        'An infinitive of at least one language is required". You can optionally add additional forms.'),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     for (var groupsForm in partOfSpeech.groupedForms)
                       LanguageForms(group: groupsForm),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Usages()
                   ],
                 ),
