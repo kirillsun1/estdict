@@ -1,5 +1,6 @@
 import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
+import 'package:estdict/app/modify_word/usages.dart';
 import 'package:estdict/domain/part_of_speech.dart';
 import 'package:estdict/domain/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,17 @@ class CreateWordView extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text("Create " + partOfSpeech.name),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.save),
+                  onPressed: () {
+                    context.read<ModifyWordBloc>().add(WordFinalized());
+
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  })
+            ],
           ),
           body: ListView(
             children: [
@@ -59,22 +71,7 @@ class CreateWordView extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              context
-                                  .read<ModifyWordBloc>()
-                                  .add(WordFinalized());
-
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: Text("Create"))
-                      ],
-                    )
+                    Usages()
                   ],
                 ),
               ),

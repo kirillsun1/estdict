@@ -1,5 +1,6 @@
 import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
+import 'package:estdict/app/modify_word/text_field.dart';
 import 'package:estdict/domain/word_form.dart';
 import 'package:estdict/domain/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
@@ -123,14 +124,11 @@ class FormValueField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-        key: Key("formValueField__$formType"),
-        initialValue: value,
-        onChanged: (value) => {onFormValueChanged(formType, value)},
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
-          border: OutlineInputBorder(),
-          labelText: formType.name,
-        ));
+    return ModifyWordTextField(
+      keySuffix: "form__$formType",
+      value: value,
+      onFormChanged: (value) => {onFormValueChanged(formType, value)},
+      hint: formType.name,
+    );
   }
 }
