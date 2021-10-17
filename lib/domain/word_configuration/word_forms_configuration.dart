@@ -1,5 +1,4 @@
-import 'package:estdict/domain/part_of_speech.dart';
-import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/domain/word.dart';
 
 enum FormsGroupId { EST, RUS, ENG }
 

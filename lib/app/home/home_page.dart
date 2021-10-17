@@ -2,8 +2,7 @@ import 'package:estdict/app/home/background.dart';
 import 'package:estdict/app/home/home_page_bloc.dart';
 import 'package:estdict/app/modify_word/create_word_page.dart';
 import 'package:estdict/app/word/word_overview.dart';
-import 'package:estdict/app/word/word_repository.dart';
-import 'package:estdict/domain/part_of_speech.dart';
+import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

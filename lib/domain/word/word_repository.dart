@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:estdict/domain/part_of_speech.dart';
 import 'package:estdict/domain/word.dart';
-import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/domain/word/part_of_speech.dart';
+import 'package:estdict/domain/word/word_form.dart';
 
 final List<Word> _words = [
   Word(PartOfSpeech.NOUN, [

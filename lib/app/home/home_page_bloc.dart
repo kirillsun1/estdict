@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:estdict/app/word/word_repository.dart';
 import 'package:estdict/domain/word.dart';
 
 class HomePageState {

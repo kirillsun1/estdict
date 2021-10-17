@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
-import 'package:estdict/domain/word_form.dart';
+import 'package:estdict/domain/word.dart';
 
 abstract class ModifyWordEvent {}
 
