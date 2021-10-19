@@ -18,6 +18,7 @@ class LanguageForms extends StatelessWidget {
         builder: (context, state) => LanguageFormsView(
             group: group,
             forms: state.forms,
+            enabled: state.status == ModifyWordStatus.IN_PROGRESS,
             onFormValueChanged: (type, value) => context
                 .read<ModifyWordBloc>()
                 .add(FormValueModified(type, value))));
@@ -32,11 +33,13 @@ class LanguageFormsView extends StatelessWidget {
   final FormsGroup group;
   final Map<WordFormType, String> forms;
   final OnFormValueChanged onFormValueChanged;
+  final bool enabled;
 
   LanguageFormsView(
       {Key? key,
       required this.group,
       required this.forms,
+      required this.enabled,
       required this.onFormValueChanged})
       : super(key: key);
 
@@ -49,6 +52,7 @@ class LanguageFormsView extends StatelessWidget {
           formType: group.infinitive,
           value: forms[group.infinitive],
           onFormValueChanged: onFormValueChanged,
+          enabled: enabled,
         ),
       ),
       for (var formType in group.optionalForms)
@@ -62,10 +66,13 @@ class LanguageFormsView extends StatelessWidget {
                     formType: formType,
                     value: forms[formType],
                     onFormValueChanged: onFormValueChanged,
+                    enabled: enabled,
                   ),
                 ),
                 IconButton(
-                    onPressed: () => {onFormValueChanged(formType, null)},
+                    onPressed: enabled
+                        ? () => {onFormValueChanged(formType, null)}
+                        : null,
                     icon: Icon(Icons.delete))
               ],
             ),
@@ -83,9 +90,11 @@ class LanguageFormsView extends StatelessWidget {
                       value: element,
                     ))
                 .toList(),
-            onChanged: (value) => {
-              if (value != null) {onFormValueChanged(value, "")}
-            },
+            onChanged: enabled
+                ? (value) => {
+                      if (value != null) {onFormValueChanged(value, "")}
+                    }
+                : null,
           ),
         )
     ]);
@@ -102,12 +111,14 @@ class FormValueField extends StatelessWidget {
   final WordFormType formType;
   final String? value;
   final OnFormValueChanged onFormValueChanged;
+  final bool enabled;
 
   const FormValueField(
       {Key? key,
       required this.formType,
       required this.value,
-      required this.onFormValueChanged})
+      required this.onFormValueChanged,
+      required this.enabled})
       : super(key: key);
 
   @override
@@ -117,6 +128,7 @@ class FormValueField extends StatelessWidget {
       value: value,
       onFormChanged: (value) => {onFormValueChanged(formType, value)},
       hint: formType.name,
+      enabled: enabled,
     );
   }
 }

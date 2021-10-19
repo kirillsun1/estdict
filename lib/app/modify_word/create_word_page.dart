@@ -54,6 +54,8 @@ class CreateWordView extends StatelessWidget {
           ),
           body: ListView(
             children: [
+              if (state.status == ModifyWordStatus.LOADING)
+                LinearProgressIndicator(),
               SizedBox(
                 height: 20,
               ),

@@ -13,6 +13,7 @@ class Usages extends StatelessWidget {
     return BlocBuilder<ModifyWordBloc, ModifyWordState>(
         builder: (context, state) => _UsagesView(
             usages: state.usages,
+            enabled: state.status == ModifyWordStatus.IN_PROGRESS,
             onUsageChanged: (index, value) {
               context.read<ModifyWordBloc>().add(UsageModified(index, value));
             }));
@@ -24,9 +25,13 @@ typedef UsageChanged = void Function(int, String?);
 class _UsagesView extends StatelessWidget {
   final List<String?> usages;
   final UsageChanged onUsageChanged;
+  final bool enabled;
 
   const _UsagesView(
-      {Key? key, required this.usages, required this.onUsageChanged})
+      {Key? key,
+      required this.usages,
+      required this.onUsageChanged,
+      required this.enabled})
       : super(key: key);
 
   @override
@@ -43,16 +48,17 @@ class _UsagesView extends StatelessWidget {
                     keySuffix: "usage__$i",
                     value: usages[i],
                     onFormChanged: (value) => {onUsageChanged(i, value)},
+                    enabled: enabled,
                   ),
                 ),
                 IconButton(
-                    onPressed: () => {onUsageChanged(i, null)},
+                    onPressed: enabled ? () => {onUsageChanged(i, null)} : null,
                     icon: Icon(Icons.delete))
               ],
             ),
           ),
       TextButton.icon(
-          onPressed: () => onUsageChanged(usages.length, ""),
+          onPressed: enabled ? () => onUsageChanged(usages.length, "") : null,
           icon: Icon(Icons.add),
           label: Text("Add new usage"))
     ]);
