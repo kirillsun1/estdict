@@ -23,4 +23,6 @@ class WordRepository {
   Future<List<Word>> getLatestWords() {
     return Future.delayed(Duration(seconds: 5), () => _words);
   }
+
+  save(Word word) {}
 }

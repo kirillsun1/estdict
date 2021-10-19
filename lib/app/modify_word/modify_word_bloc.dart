@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
+import 'package:estdict/app/modify_word/word_converter.dart';
 import 'package:estdict/domain/word.dart';
 
 import 'modify_word_state_validator.dart';
@@ -68,7 +69,8 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
         usages: List.unmodifiable(modifiableUsages)));
   }
 
-  void _onWordFinalized(WordFinalized event, Emitter<ModifyWordState> emit) {
+  Future<void> _onWordFinalized(
+      WordFinalized event, Emitter<ModifyWordState> emit) async {
     emit(ModifyWordState(
         partOfSpeech: state.partOfSpeech,
         forms: state.forms,
@@ -76,7 +78,10 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
         status: ModifyWordStatus.LOADING));
 
     final errors = modifyWordStateValidator.validate(state);
-    // TODO: Convert to word and save
+    if (errors == null) {
+      var word = createWord(state);
+      // TODO: save to repository
+    }
 
     emit(ModifyWordState(
         partOfSpeech: state.partOfSpeech,
