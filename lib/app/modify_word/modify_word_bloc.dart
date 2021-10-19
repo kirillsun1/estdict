@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/domain/word.dart';
 
+import 'modify_word_state_validator.dart';
+
 abstract class ModifyWordEvent {}
 
 class FormValueModified extends ModifyWordEvent {
@@ -21,7 +23,11 @@ class UsageModified extends ModifyWordEvent {
 }
 
 class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
-  ModifyWordBloc(ModifyWordState state) : super(state) {
+  final ModifyWordStateValidator modifyWordStateValidator;
+
+  ModifyWordBloc(ModifyWordState state,
+      [this.modifyWordStateValidator = const ModifyWordStateValidator()])
+      : super(state) {
     on<FormValueModified>(_onFormValueModified);
     on<WordFinalized>(_onWordFinalized);
     on<UsageModified>(_onUsageModified);
@@ -37,7 +43,9 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
     }
 
     emit(ModifyWordState(
-        state.partOfSpeech, Map.unmodifiable(forms), state.usages));
+        partOfSpeech: state.partOfSpeech,
+        forms: Map.unmodifiable(forms),
+        usages: state.usages));
   }
 
   void _onUsageModified(UsageModified event, Emitter<ModifyWordState> emit) {
@@ -55,10 +63,28 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
     modifiableUsages[indexToChange] = event.value;
 
     emit(ModifyWordState(
-        state.partOfSpeech, state.forms, List.unmodifiable(modifiableUsages)));
+        partOfSpeech: state.partOfSpeech,
+        forms: state.forms,
+        usages: List.unmodifiable(modifiableUsages)));
   }
 
   void _onWordFinalized(WordFinalized event, Emitter<ModifyWordState> emit) {
-    // TODO: Add Save
+    emit(ModifyWordState(
+        partOfSpeech: state.partOfSpeech,
+        forms: state.forms,
+        usages: state.usages,
+        status: ModifyWordStatus.LOADING));
+
+    final errors = modifyWordStateValidator.validate(state);
+    // TODO: Convert to word and save
+
+    emit(ModifyWordState(
+        partOfSpeech: state.partOfSpeech,
+        forms: state.forms,
+        usages: state.usages,
+        errors: errors,
+        status: errors == null
+            ? ModifyWordStatus.DONE
+            : ModifyWordStatus.IN_PROGRESS));
   }
 }

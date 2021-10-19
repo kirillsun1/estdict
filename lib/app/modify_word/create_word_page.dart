@@ -19,7 +19,15 @@ class CreateWordPage extends StatelessWidget {
     return BlocProvider(
         create: (context) =>
             ModifyWordBloc(ModifyWordState.newWord(partOfSpeech)),
-        child: CreateWordView());
+        child: BlocListener<ModifyWordBloc, ModifyWordState>(
+            listener: (context, state) {
+              if (state.status == ModifyWordStatus.DONE) {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              }
+            },
+            child: CreateWordView()));
   }
 }
 
@@ -41,10 +49,6 @@ class CreateWordView extends StatelessWidget {
                   icon: Icon(Icons.save),
                   onPressed: () {
                     context.read<ModifyWordBloc>().add(WordFinalized());
-
-                    if (Navigator.canPop(context)) {
-                      Navigator.pop(context);
-                    }
                   })
             ],
           ),
