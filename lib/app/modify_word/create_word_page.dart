@@ -17,8 +17,9 @@ class CreateWordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) =>
-            ModifyWordBloc(ModifyWordState.newWord(partOfSpeech)),
+        create: (context) => ModifyWordBloc(
+            ModifyWordState.newWord(partOfSpeech),
+            context.read<WordRepository>()),
         child: BlocListener<ModifyWordBloc, ModifyWordState>(
             listener: (context, state) {
               if (state.status == ModifyWordStatus.DONE) {

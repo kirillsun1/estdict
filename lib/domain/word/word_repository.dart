@@ -20,9 +20,13 @@ final List<Word> _words = [
 ];
 
 class WordRepository {
+  final List<Word> _cachedWords = List.of(_words);
+
   Future<List<Word>> getLatestWords() {
-    return Future.delayed(Duration(seconds: 5), () => _words);
+    return Future.value(_cachedWords);
   }
 
-  save(Word word) {}
+  save(Word word) async {
+    _cachedWords.insert(0, word);
+  }
 }

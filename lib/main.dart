@@ -1,7 +1,9 @@
 import 'package:estdict/app/home/home_page.dart';
+import 'package:estdict/domain/word.dart';
 import 'package:estdict/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(EstDictionary());
@@ -20,41 +22,44 @@ class EstDictionary extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      title: 'EST Dictionary',
-      theme: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: primaryColor,
-          accentColor: secondaryColor,
-          primarySwatch: Colors.deepOrange,
-          cardColor: lighten(secondaryColor),
-          textTheme: textTheme,
-          bottomNavigationBarTheme: Theme.of(context)
-              .bottomNavigationBarTheme
-              .copyWith(backgroundColor: primaryColor),
+    return RepositoryProvider(
+      create: (context) => WordRepository(),
+      child: MaterialApp(
+        title: 'EST Dictionary',
+        theme: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: primaryColor,
+            accentColor: secondaryColor,
+            primarySwatch: Colors.deepOrange,
+            cardColor: lighten(secondaryColor),
+            textTheme: textTheme,
+            bottomNavigationBarTheme: Theme.of(context)
+                .bottomNavigationBarTheme
+                .copyWith(backgroundColor: primaryColor),
 
-          // TODO: harmonize themes
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0)))))),
-      darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: darken(primaryColor, 60),
-          accentColor: darken(secondaryColor, 30),
-          primarySwatch: Colors.deepOrange,
-          cardColor: darken(primaryColor, 65),
-          bottomNavigationBarTheme: Theme.of(context)
-              .bottomNavigationBarTheme
-              .copyWith(backgroundColor: darken(primaryColor, 60)),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0)))))),
-      themeMode: ThemeMode.system,
-      home: HomePage(),
+            // TODO: harmonize themes
+            elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)))))),
+        darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            primaryColor: darken(primaryColor, 60),
+            accentColor: darken(secondaryColor, 30),
+            primarySwatch: Colors.deepOrange,
+            cardColor: darken(primaryColor, 65),
+            bottomNavigationBarTheme: Theme.of(context)
+                .bottomNavigationBarTheme
+                .copyWith(backgroundColor: darken(primaryColor, 60)),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)))))),
+        themeMode: ThemeMode.system,
+        home: HomePage(),
+      ),
     );
   }
 }

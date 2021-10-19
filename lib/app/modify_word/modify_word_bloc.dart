@@ -23,10 +23,11 @@ class UsageModified extends ModifyWordEvent {
 }
 
 class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
-  final WordValidator wordValidator;
+  final WordValidator _wordValidator;
+  final WordRepository _wordRepository;
 
-  ModifyWordBloc(ModifyWordState state,
-      [this.wordValidator = const WordValidator()])
+  ModifyWordBloc(ModifyWordState state, this._wordRepository,
+      [this._wordValidator = const WordValidator()])
       : super(state) {
     on<FormValueModified>(_onFormValueModified);
     on<WordFinalized>(_onWordFinalized);
@@ -77,9 +78,9 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
         status: ModifyWordStatus.LOADING));
 
     final word = createWord(state);
-    final errors = wordValidator.validate(word);
+    final errors = _wordValidator.validate(word);
     if (errors == null) {
-      // TODO: save to repository
+      await _wordRepository.save(word);
     }
 
     emit(ModifyWordState(

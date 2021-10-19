@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) =>
-            HomePageBloc(WordRepository())..add(WordsRequested()),
+            HomePageBloc(context.read<WordRepository>())..add(WordsRequested()),
         child: _HomePageView());
   }
 }
