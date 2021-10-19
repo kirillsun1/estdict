@@ -4,6 +4,7 @@ class ModifyWordTextField extends StatelessWidget {
   final String keySuffix;
   final String? value;
   final String? hint;
+  final String? error;
   final bool enabled;
   final Function(String) onFormChanged;
 
@@ -11,8 +12,9 @@ class ModifyWordTextField extends StatelessWidget {
       {Key? key,
       required this.keySuffix,
       required this.value,
-      this.enabled = true,
       this.hint,
+      this.error,
+      this.enabled = true,
       required this.onFormChanged})
       : super(key: key);
 
@@ -27,6 +29,6 @@ class ModifyWordTextField extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
           border: OutlineInputBorder(),
           labelText: hint,
-        ));
+            errorText: error));
   }
 }

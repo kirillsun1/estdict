@@ -2,6 +2,7 @@ import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/app/modify_word/text_field.dart';
 import 'package:estdict/components/section.dart';
+import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word/word_form.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class LanguageForms extends StatelessWidget {
             group: group,
             forms: state.forms,
             enabled: state.status == ModifyWordStatus.IN_PROGRESS,
+            errors: state.errors,
             onFormValueChanged: (type, value) => context
                 .read<ModifyWordBloc>()
                 .add(FormValueModified(type, value))));
@@ -34,13 +36,15 @@ class LanguageFormsView extends StatelessWidget {
   final Map<WordFormType, String> forms;
   final OnFormValueChanged onFormValueChanged;
   final bool enabled;
+  final WordValidationErrors? errors;
 
   LanguageFormsView(
       {Key? key,
       required this.group,
       required this.forms,
       required this.enabled,
-      required this.onFormValueChanged})
+      required this.onFormValueChanged,
+      required this.errors})
       : super(key: key);
 
   @override
@@ -53,6 +57,7 @@ class LanguageFormsView extends StatelessWidget {
           value: forms[group.infinitive],
           onFormValueChanged: onFormValueChanged,
           enabled: enabled,
+          error: infinitiveError,
         ),
       ),
       for (var formType in group.optionalForms)
@@ -60,6 +65,7 @@ class LanguageFormsView extends StatelessWidget {
           Container(
             margin: margin,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: FormValueField(
@@ -67,6 +73,9 @@ class LanguageFormsView extends StatelessWidget {
                     value: forms[formType],
                     onFormValueChanged: onFormValueChanged,
                     enabled: enabled,
+                    error: errors?.isFormInvalid(formType) ?? false
+                        ? "Cannot be empty or contain only spaces."
+                        : null,
                   ),
                 ),
                 IconButton(
@@ -100,6 +109,17 @@ class LanguageFormsView extends StatelessWidget {
     ]);
   }
 
+  String? get infinitiveError {
+    List<String> all = [];
+    if (errors?.missingInfinitive ?? false) {
+      all.add("At least one infinitive is required");
+    }
+    if (errors?.isFormInvalid(group.infinitive) ?? false) {
+      all.add("Cannot be empty or contain only spaces.");
+    }
+    return all.isNotEmpty ? all.join(" ") : null;
+  }
+
   bool isOptionalFormWithValue(WordFormType formType) =>
       formType != group.infinitive && forms.containsKey(formType);
 
@@ -110,6 +130,7 @@ class LanguageFormsView extends StatelessWidget {
 class FormValueField extends StatelessWidget {
   final WordFormType formType;
   final String? value;
+  final String? error;
   final OnFormValueChanged onFormValueChanged;
   final bool enabled;
 
@@ -117,6 +138,7 @@ class FormValueField extends StatelessWidget {
       {Key? key,
       required this.formType,
       required this.value,
+      this.error,
       required this.onFormValueChanged,
       required this.enabled})
       : super(key: key);
@@ -129,6 +151,7 @@ class FormValueField extends StatelessWidget {
       onFormChanged: (value) => {onFormValueChanged(formType, value)},
       hint: formType.name,
       enabled: enabled,
+      error: error,
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:estdict/app/modify_word/modify_word_bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/app/modify_word/text_field.dart';
 import 'package:estdict/components/section.dart';
+import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,7 @@ class Usages extends StatelessWidget {
         builder: (context, state) => _UsagesView(
             usages: state.usages,
             enabled: state.status == ModifyWordStatus.IN_PROGRESS,
+            errors: state.errors,
             onUsageChanged: (index, value) {
               context.read<ModifyWordBloc>().add(UsageModified(index, value));
             }));
@@ -26,12 +28,14 @@ class _UsagesView extends StatelessWidget {
   final List<String?> usages;
   final UsageChanged onUsageChanged;
   final bool enabled;
+  final WordValidationErrors? errors;
 
   const _UsagesView(
       {Key? key,
       required this.usages,
       required this.onUsageChanged,
-      required this.enabled})
+      required this.enabled,
+      required this.errors})
       : super(key: key);
 
   @override
@@ -42,6 +46,7 @@ class _UsagesView extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(vertical: 4.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: ModifyWordTextField(
@@ -49,6 +54,9 @@ class _UsagesView extends StatelessWidget {
                     value: usages[i],
                     onFormChanged: (value) => {onUsageChanged(i, value)},
                     enabled: enabled,
+                    error: errors?.isUsageInvalid(i) ?? false
+                        ? "Cannot be empty or contain only spaces."
+                        : null,
                   ),
                 ),
                 IconButton(

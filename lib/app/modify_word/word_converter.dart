@@ -12,6 +12,7 @@ List<String> _createUsages(List<String?> usages) {
 
 List<WordForm> _createForms(Map<WordFormType, String> forms) {
   return forms.entries
+      .where((e) => e.value.trim().isNotEmpty)
       .map((e) => WordForm(e.key, _normalizeValue(e.value)))
       .toList();
 }

@@ -15,4 +15,11 @@ class Word {
         .firstWhereIndexedOrNull((i, e) => e.formType == formType)
         ?.value;
   }
+
+  @override
+  String toString() {
+    var formsString =
+        "[${forms.map((e) => "${e.formType} -> ${e.value}").join(", ")}]";
+    return 'Word{partOfSpeech: $partOfSpeech, forms: $formsString, usages: $usages}';
+  }
 }

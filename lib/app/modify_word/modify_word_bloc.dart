@@ -2,8 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/app/modify_word/word_converter.dart';
 import 'package:estdict/domain/word.dart';
-
-import 'modify_word_state_validator.dart';
+import 'package:estdict/domain/word/word_validator.dart';
 
 abstract class ModifyWordEvent {}
 
@@ -24,10 +23,10 @@ class UsageModified extends ModifyWordEvent {
 }
 
 class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
-  final ModifyWordStateValidator modifyWordStateValidator;
+  final WordValidator wordValidator;
 
   ModifyWordBloc(ModifyWordState state,
-      [this.modifyWordStateValidator = const ModifyWordStateValidator()])
+      [this.wordValidator = const WordValidator()])
       : super(state) {
     on<FormValueModified>(_onFormValueModified);
     on<WordFinalized>(_onWordFinalized);
@@ -77,9 +76,9 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
         usages: state.usages,
         status: ModifyWordStatus.LOADING));
 
-    final errors = modifyWordStateValidator.validate(state);
+    final word = createWord(state);
+    final errors = wordValidator.validate(word);
     if (errors == null) {
-      var word = createWord(state);
       // TODO: save to repository
     }
 
