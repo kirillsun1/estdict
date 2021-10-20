@@ -32,13 +32,16 @@ class _HomePageView extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).padding.top,
             ),
-            createWelcomeBar(),
             SizedBox(
               height: 20,
             ),
+            createWelcomeBar(),
+            SizedBox(
+              height: 30,
+            ),
             LastAddedWords(),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
             createNewWordBar()
           ],
@@ -61,7 +64,7 @@ class _HomePageView extends StatelessWidget {
 
 Widget createWelcomeBar() {
   return Padding(
-    padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
+    padding: const EdgeInsets.only(top: 8.0, left: 24, right: 24),
     child: Text(
       'Welcome to EST Dictionary',
       textAlign: TextAlign.left,
@@ -89,19 +92,13 @@ class LastAddedWords extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (state.loading)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 18, right: 18),
-                          child: Text(
-                            'loading...',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [CircularProgressIndicator()],
                         )
                       else ...[
                         Padding(
-                          padding: const EdgeInsets.only(left: 18, right: 18),
+                          padding: const EdgeInsets.only(left: 24, right: 24),
                           child: Text(
                             'Here is what you learned previously:',
                             textAlign: TextAlign.left,
@@ -111,11 +108,14 @@ class LastAddedWords extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10),
-                        Column(
-                          children: [
-                            ...state.words
-                                .map((word) => WordOverview(word: word))
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 8),
+                          child: Column(
+                            children: [
+                              ...state.words
+                                  .map((word) => WordOverview(word: word))
+                            ],
+                          ),
                         )
                       ]
                     ],
@@ -129,7 +129,7 @@ class LastAddedWords extends StatelessWidget {
 Widget createNewWordBar() {
   var wordTypes = PartOfSpeech.values;
   return Padding(
-      padding: const EdgeInsets.only(left: 18, right: 18),
+      padding: const EdgeInsets.only(left: 24, right: 24),
       child: Row(
         children: [
           Expanded(
