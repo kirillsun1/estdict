@@ -16,10 +16,14 @@ class WordsRequested extends HomePageEvent {}
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final WordRepository _wordRepository;
+  late final StreamSubscription<WordRepositoryEvent>
+      _wordRepositoryEventSubscription;
 
   HomePageBloc(this._wordRepository) : super(HomePageState(false, [])) {
     on<WordsRequested>(_onWordsRequested);
-    // TODO: subscribe to repo changes
+    _wordRepositoryEventSubscription = _wordRepository.events.listen((event) {
+      add(WordsRequested());
+    });
   }
 
   Future<void> _onWordsRequested(
@@ -31,5 +35,13 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     } finally {
       emit(HomePageState(false, state.words));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _wordRepositoryEventSubscription.cancel();
+    // TODO: where is the best place for the disposal?
+    _wordRepository.dispose();
+    return super.close();
   }
 }

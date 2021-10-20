@@ -19,8 +19,20 @@ final List<Word> _words = [
   ])
 ];
 
+enum WordRepositoryEvent { WORD_ADDED }
+
 class WordRepository {
   final List<Word> _cachedWords = List.of(_words);
+
+  /*
+  TODO: better solution?
+  We need to notify blocs when the repository has been changed.
+   */
+  final _controller = StreamController<WordRepositoryEvent>();
+
+  Stream<WordRepositoryEvent> get events async* {
+    yield* _controller.stream;
+  }
 
   Future<List<Word>> getLatestWords() {
     return Future.value(_cachedWords);
@@ -28,5 +40,10 @@ class WordRepository {
 
   save(Word word) async {
     _cachedWords.insert(0, word);
+    _controller.add(WordRepositoryEvent.WORD_ADDED);
+  }
+
+  void dispose() {
+    _controller.close();
   }
 }
