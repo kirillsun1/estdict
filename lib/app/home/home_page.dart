@@ -27,37 +27,27 @@ class _HomePageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Background(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).padding.top,
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            WelcomeBar(),
-            SizedBox(
-              height: 30,
-            ),
-            LastAddedWords(),
-            SizedBox(
-              height: 30,
-            ),
-            CreateWordButtons()
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search), label: "Find word")
-          ],
-        ),
-      ),
+          backgroundColor: Colors.transparent,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).padding.top,
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              WelcomeBar(),
+              SizedBox(
+                height: 30,
+              ),
+              LastAddedWords(),
+              SizedBox(
+                height: 30,
+              ),
+              CreateWordButtons()
+            ],
+          )),
     );
   }
 }
