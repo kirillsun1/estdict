@@ -1,23 +1,8 @@
 import 'dart:async';
 
-import 'package:estdict/domain/word.dart';
-import 'package:estdict/domain/word/part_of_speech.dart';
-import 'package:estdict/domain/word/word_form.dart';
-
-final List<Word> _words = [
-  Word(PartOfSpeech.NOUN, [
-    WordForm(WordFormType.EST_INF, "mäng"),
-    WordForm(WordFormType.RUS_INF, "игра"),
-  ]),
-  Word(PartOfSpeech.ADJECTIVE, [
-    WordForm(WordFormType.EST_INF, "ilus"),
-    WordForm(WordFormType.RUS_INF, "красивый"),
-  ]),
-  Word(PartOfSpeech.VERB, [
-    WordForm(WordFormType.EST_INF, "tegema"),
-    WordForm(WordFormType.RUS_INF, "делать"),
-  ])
-];
+import 'package:drift/drift.dart';
+import 'package:estdict/domain/word.dart' as WordDomain;
+import 'package:estdict/domain/word/word_database.dart';
 
 enum WordRepositoryEvent { WORD_ADDED }
 
@@ -28,7 +13,8 @@ class WordsQuery {
 }
 
 class WordRepository {
-  final List<Word> _cachedWords = List.of(_words);
+  final WordDatabase _database;
+  final WordDomain.WordValidator _validator;
 
   /*
   TODO: better solution?
@@ -36,20 +22,112 @@ class WordRepository {
    */
   final _controller = StreamController<WordRepositoryEvent>();
 
+  WordRepository(
+      {WordDatabase? database,
+      WordDomain.WordValidator validator = const WordDomain.WordValidator()})
+      : _database = database ?? WordDatabase(),
+        _validator = validator;
+
   Stream<WordRepositoryEvent> get events async* {
     yield* _controller.stream;
   }
 
-  Future<List<Word>> findWords(WordsQuery query) {
-    return Future.value(_cachedWords.take(query.maxResults).toList());
+  Future<List<WordDomain.Word>> findWords(WordsQuery wordsQuery) async {
+    final rows = await _database.transaction(() async {
+      final query = _database.select(_database.words).join([
+        innerJoin(_database.wordForms,
+            _database.wordForms.wordId.equalsExp(_database.words.id)),
+        leftOuterJoin(_database.usages,
+            _database.usages.wordId.equalsExp(_database.words.id)),
+      ]);
+      query.orderBy([OrderingTerm.desc(_database.words.createdAt)]);
+      query.limit(wordsQuery.maxResults);
+
+      return await query.get();
+    });
+    return Future.value(_createWords(rows));
   }
 
-  save(Word word) async {
-    _cachedWords.insert(0, word);
+  List<WordDomain.Word> _createWords(List<TypedResult> rows) {
+    List<int> ids = [];
+    Map<int, WordDomain.PartOfSpeech> partsOfSpeech = {};
+    Map<int, Map<WordDomain.WordFormType, String>> forms = {};
+    Map<int, Set<String>> usages = {};
+    for (var row in rows) {
+      var dbWord = row.readTable(_database.words);
+      var dbForm = row.readTable(_database.wordForms);
+      var dbUsage = row.readTableOrNull(_database.usages);
+      final wordId = dbWord.id;
+
+      if (!partsOfSpeech.containsKey(wordId)) {
+        ids.add(dbWord.id);
+        partsOfSpeech[wordId] =
+            find(WordDomain.PartOfSpeech.values, dbWord.partOfSpeech);
+
+        forms[wordId] = {};
+        usages[wordId] = {};
+      }
+
+      final wordFormType =
+          find(WordDomain.WordFormType.values, dbForm.formType);
+      (forms[wordId]!)[wordFormType] = dbForm.value;
+      if (dbUsage != null) {
+        usages[dbWord]?.add(dbUsage.value);
+      }
+    }
+
+    return ids
+        .map((id) => WordDomain.Word.withId(
+            id,
+            partsOfSpeech[id]!,
+            forms[id]!
+                .entries
+                .map((e) => WordDomain.WordForm(e.key, e.value))
+                .toList(),
+            usages[id]!.toList()))
+        .toList();
+  }
+
+  save(WordDomain.Word word) async {
+    final errors = _validator.validate(word);
+    if (errors != null) {
+      throw Exception("Word is invalid");
+    }
+
+    await _database.transaction(() async {
+      final wordId = await _database.into(_database.words).insert(
+          WordsCompanion(
+              partOfSpeech: Value(_normalizeEnumName(word.partOfSpeech))));
+
+      await _database.batch((batch) {
+        batch.insertAll(
+            _database.wordForms,
+            word.forms
+                .map((form) => WordForm(
+                    formType: _normalizeEnumName(form.formType),
+                    value: form.value,
+                    wordId: wordId))
+                .toList());
+
+        batch.insertAll(
+            _database.usages,
+            word.usages
+                .map((value) => Usage(value: value, wordId: wordId))
+                .toList());
+      });
+    });
     _controller.add(WordRepositoryEvent.WORD_ADDED);
   }
 
   void dispose() {
     _controller.close();
   }
+}
+
+T find<T extends Enum>(Iterable<T> values, String value) {
+  return values.where((type) => _normalizeEnumName(type) == value).first;
+}
+
+String _normalizeEnumName<T extends Enum>(T value) {
+  return value.toString().split(".").last;
 }
