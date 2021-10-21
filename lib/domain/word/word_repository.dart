@@ -21,6 +21,12 @@ final List<Word> _words = [
 
 enum WordRepositoryEvent { WORD_ADDED }
 
+class WordsQuery {
+  final int maxResults;
+
+  WordsQuery({this.maxResults = 10});
+}
+
 class WordRepository {
   final List<Word> _cachedWords = List.of(_words);
 
@@ -34,8 +40,8 @@ class WordRepository {
     yield* _controller.stream;
   }
 
-  Future<List<Word>> getLatestWords() {
-    return Future.value(_cachedWords);
+  Future<List<Word>> findWords(WordsQuery query) {
+    return Future.value(_cachedWords.take(query.maxResults).toList());
   }
 
   save(Word word) async {

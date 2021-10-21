@@ -30,7 +30,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       WordsRequested event, Emitter<HomePageState> emit) async {
     try {
       emit(HomePageState(true, []));
-      var words = await _wordRepository.getLatestWords();
+      var words = await _wordRepository.findWords(WordsQuery(maxResults: 5));
       emit(HomePageState(false, words));
     } finally {
       emit(HomePageState(false, state.words));
