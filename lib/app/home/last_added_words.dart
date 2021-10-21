@@ -23,6 +23,15 @@ class LastAddedWords extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [CircularProgressIndicator()],
                         )
+                      else if (state.words.isEmpty)
+                        HomePageBlock(
+                            child: Text(
+                          'Your latest added words will appear here once you add new words.',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ))
                       else ...[
                         HomePageBlock(
                             child: Text(
@@ -34,14 +43,14 @@ class LastAddedWords extends StatelessWidget {
                         )),
                         SizedBox(height: 10),
                         HomePageBlock(
-                            narrow: true,
-                            child: Column(
-                              children: [
-                                ...state.words
-                                    .map((word) => WordOverview(word: word))
-                              ],
-                            ))
-                      ]
+                                narrow: true,
+                                child: Column(
+                                  children: [
+                                    ...state.words
+                                        .map((word) => WordOverview(word: word))
+                                  ],
+                                ))
+                          ]
                     ],
                   ),
                 )
