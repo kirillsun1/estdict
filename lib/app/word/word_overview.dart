@@ -2,16 +2,16 @@ import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-const _primaryFormToShow = WordFormType.EST_INF;
-
 class WordOverview extends StatelessWidget {
   final Word _word;
-  final WordFormType additionalFormToShow;
+  final WordFormType primaryForm;
+  final WordFormType secondaryForm;
 
   const WordOverview(
       {Key? key,
       required Word word,
-      this.additionalFormToShow = WordFormType.RUS_INF})
+      this.primaryForm = WordFormType.EST_INF,
+      this.secondaryForm = WordFormType.RUS_INF})
       : _word = word,
         super(key: key);
 
@@ -28,12 +28,12 @@ class WordOverview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                this._word.findFormValue(_primaryFormToShow) ?? "",
+                this._word.findFormValue(primaryForm) ?? "",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(this._word.findFormValue(this.additionalFormToShow) ?? "")
+              Text(this._word.findFormValue(this.secondaryForm) ?? "")
             ],
           ),
           Chip(
