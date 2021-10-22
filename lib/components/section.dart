@@ -16,7 +16,7 @@ class Section extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         if (subtitle != null) Text(subtitle!),
         SizedBox(

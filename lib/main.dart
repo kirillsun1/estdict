@@ -11,9 +11,7 @@ void main() {
 
 const primaryColor = Color(0xffffb5a7);
 const secondaryColor = Color(0xfffcd5ce);
-const darkModeModifiers = [15, 25, 35];
-final textTheme = TextTheme(
-    bodyText2: TextStyle(color: darken(Colors.deepOrange.shade800, 30)));
+const textColor = Color(0xff460000);
 
 class EstDictionary extends StatelessWidget {
   @override
@@ -26,40 +24,37 @@ class EstDictionary extends StatelessWidget {
       create: (context) => WordRepository(),
       child: MaterialApp(
         title: 'EST Dictionary',
-        theme: ThemeData(
-            brightness: Brightness.light,
-            primaryColor: primaryColor,
-            accentColor: secondaryColor,
-            primarySwatch: Colors.deepOrange,
-            cardColor: lighten(secondaryColor),
-            textTheme: textTheme,
-            bottomNavigationBarTheme: Theme.of(context)
-                .bottomNavigationBarTheme
-                .copyWith(backgroundColor: primaryColor),
-
-            // TODO: harmonize themes
-            elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0)))))),
-        darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            primaryColor: darken(primaryColor, 60),
-            accentColor: darken(secondaryColor, 30),
-            primarySwatch: Colors.deepOrange,
-            cardColor: darken(primaryColor, 65),
-            bottomNavigationBarTheme: Theme.of(context)
-                .bottomNavigationBarTheme
-                .copyWith(backgroundColor: darken(primaryColor, 60)),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0)))))),
-        themeMode: ThemeMode.system,
+        theme: createTheme(Brightness.light),
+        darkTheme: createTheme(Brightness.dark),
         home: HomePage(),
       ),
     );
+  }
+
+  ThemeData createTheme(Brightness brightness) {
+    var backgroundColor = brightness == Brightness.light
+        ? lighten(secondaryColor, 50)
+        : darken(secondaryColor, 50);
+    var primary = brightness == Brightness.light
+        ? primaryColor
+        : darken(primaryColor, 60);
+    var secondary = brightness == Brightness.light
+        ? secondaryColor
+        : darken(secondaryColor, 45);
+    var text =
+        brightness == Brightness.light ? textColor : lighten(primaryColor, 20);
+
+    var themeData = ThemeData(
+        cardColor: backgroundColor,
+        colorScheme: brightness == Brightness.light
+            ? ColorScheme.light(primary: primary, secondary: secondary)
+            : ColorScheme.dark(primary: primary, secondary: secondary));
+    return themeData.copyWith(
+        textTheme: themeData.textTheme.apply(bodyColor: text),
+        appBarTheme: AppBarTheme(
+            iconTheme: IconThemeData(color: text),
+            titleTextStyle: TextStyle(color: text, fontSize: 20.0)),
+        chipTheme: themeData.chipTheme.copyWith(
+            backgroundColor: secondary, labelStyle: TextStyle(color: text)));
   }
 }
