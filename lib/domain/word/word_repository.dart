@@ -34,16 +34,24 @@ class WordRepository {
 
   Future<List<WordDomain.Word>> findWords(WordsQuery wordsQuery) async {
     final rows = await _database.transaction(() async {
-      final query = _database.select(_database.words).join([
+      final wordsDbQuery = _database.selectOnly(_database.words)
+        ..addColumns([_database.words.id])
+        ..orderBy([OrderingTerm.desc(_database.words.createdAt)])
+        ..limit(wordsQuery.maxResults);
+
+      final words = await wordsDbQuery.get();
+      final wordsIds = words.map((e) => e.read(_database.words.id));
+
+      final allDataDbQuery = _database.select(_database.words).join([
         innerJoin(_database.wordForms,
             _database.wordForms.wordId.equalsExp(_database.words.id)),
         leftOuterJoin(_database.usages,
-            _database.usages.wordId.equalsExp(_database.words.id)),
-      ]);
-      query.orderBy([OrderingTerm.desc(_database.words.createdAt)]);
-      query.limit(wordsQuery.maxResults);
+            _database.usages.wordId.equalsExp(_database.words.id))
+      ])
+        ..where(_database.words.id.isIn(wordsIds))
+        ..orderBy([OrderingTerm.desc(_database.words.createdAt)]);
 
-      return await query.get();
+      return await allDataDbQuery.get();
     });
     return Future.value(_createWords(rows));
   }
