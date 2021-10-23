@@ -1,5 +1,5 @@
 import 'package:estdict/app/home/home_page_block.dart';
-import 'package:estdict/app/word/word_overview.dart';
+import 'package:estdict/app/word/word_overview_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,8 +47,8 @@ class LastAddedWords extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     ...state.words
-                                        .map((word) => WordOverview(word: word))
-                                  ],
+                                    .map((word) => WordOverviewCard(word: word))
+                              ],
                                 ))
                           ]
                     ],
