@@ -72,7 +72,7 @@ class WordRepository {
           find(WordDomain.WordFormType.values, dbForm.formType);
       (forms[wordId]!)[wordFormType] = dbForm.value;
       if (dbUsage != null) {
-        usages[dbWord]?.add(dbUsage.value);
+        usages[wordId]?.add(dbUsage.value);
       }
     }
 
