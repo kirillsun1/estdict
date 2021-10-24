@@ -22,24 +22,30 @@ class WordOverviewCard extends StatelessWidget {
       onTap: () {
         openWordOverviewPage(context);
       },
-      child: Padding(
+      child: Container(
         padding:
             const EdgeInsets.only(top: 6.0, left: 18, right: 18, bottom: 6.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  this.word.forms[primaryForm] ?? "",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    this.word.forms[primaryForm] ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(this.word.forms[this.secondaryForm] ?? "")
-              ],
+                  Text(
+                    this.word.forms[this.secondaryForm] ?? "",
+                    overflow: TextOverflow.ellipsis,
+                  )
+                ],
+              ),
             ),
+            SizedBox(width: 15),
             Chip(
               label: Text(this.word.partOfSpeech.name),
             )
