@@ -1,10 +1,3 @@
-class WordForm {
-  final WordFormType formType;
-  final String value;
-
-  WordForm(this.formType, this.value);
-}
-
 enum WordFormType {
   // Main forms. Might have different name depending on the word type.
   EST_INF,

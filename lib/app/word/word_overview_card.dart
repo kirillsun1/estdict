@@ -32,12 +32,12 @@ class WordOverviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  this.word.findFormValue(primaryForm) ?? "",
+                  this.word.forms[primaryForm] ?? "",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(this.word.findFormValue(this.secondaryForm) ?? "")
+                Text(this.word.forms[this.secondaryForm] ?? "")
               ],
             ),
             Chip(

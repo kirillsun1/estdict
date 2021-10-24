@@ -79,10 +79,7 @@ class WordRepository {
 
     return ids
         .map((id) => Word.withId(
-            id,
-            partsOfSpeech[id]!,
-            forms[id]!.entries.map((e) => WordForm(e.key, e.value)).toList(),
-            usages[id]!.toList()))
+            id, partsOfSpeech[id]!, forms[id]!, usages[id]!.toList()))
         .toList();
   }
 
@@ -100,10 +97,10 @@ class WordRepository {
       await _database.batch((batch) {
         batch.insertAll(
             _database.wordForms,
-            word.forms
-                .map((form) => Db.WordForm(
-                    formType: _normalizeEnumName(form.formType),
-                    value: form.value,
+            word.forms.entries
+                .map((entry) => Db.WordForm(
+                    formType: _normalizeEnumName(entry.key),
+                    value: entry.value,
                     wordId: wordId))
                 .toList());
 

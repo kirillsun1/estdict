@@ -7,14 +7,15 @@ class WordPage extends StatelessWidget {
   final Word word;
   final WordFormType primaryForm;
 
-  const WordPage({Key? key, required this.word, this.primaryForm = WordFormType.EST_INF})
+  const WordPage(
+      {Key? key, required this.word, this.primaryForm = WordFormType.EST_INF})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(word.findFormValue(primaryForm) ?? ""),
+        title: Text(word.forms[primaryForm] ?? ""),
       ),
       body: ListView(
         children: [
@@ -39,8 +40,8 @@ class WordPage extends StatelessWidget {
                       group.infinitive,
                       ...group.optionalForms
                     ])
-                      if (word.findFormValue(formType) != null)
-                        Chip(label: Text(word.findFormValue(formType)!))
+                      if (word.forms.containsKey(formType))
+                        Chip(label: Text(word.forms[formType]!))
                   ],
                 )
               ]),

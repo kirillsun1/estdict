@@ -1,5 +1,5 @@
 import 'package:estdict/domain/word/word.dart';
-import 'package:estdict/domain/word/word_form.dart';
+import 'package:estdict/domain/word/word_form_type.dart';
 import 'package:estdict/domain/word/word_validation_errors.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
 
@@ -21,14 +21,14 @@ class WordValidator {
   bool _isInfinitiveMissing(Word word) {
     final infinitives =
         word.partOfSpeech.groupedForms.map((e) => e.infinitive).toSet();
-    final usedForms = word.forms.map((e) => e.formType).toSet();
+    final usedForms = word.forms.keys.toSet();
     return infinitives.intersection(usedForms).isEmpty;
   }
 
   Set<WordFormType> _validateForms(Word word) {
-    return word.forms
+    return word.forms.entries
         .where((element) => _isBlank(element.value))
-        .map((e) => e.formType)
+        .map((e) => e.key)
         .toSet();
   }
 
