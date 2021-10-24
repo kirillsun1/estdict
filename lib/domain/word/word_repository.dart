@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:estdict/domain/word.dart' as WordDomain;
-import 'package:estdict/domain/word/word_database.dart';
+import 'package:estdict/domain/word.dart';
+import 'package:estdict/domain/word/word_database.dart' as Db;
 
 enum WordRepositoryEvent { WORD_ADDED }
 
@@ -13,26 +13,21 @@ class WordsQuery {
 }
 
 class WordRepository {
-  final WordDatabase _database;
-  final WordDomain.WordValidator _validator;
-
-  /*
-  TODO: better solution?
-  We need to notify blocs when the repository has been changed.
-   */
+  final Db.WordDatabase _database;
+  final WordValidator _validator;
   final _controller = StreamController<WordRepositoryEvent>();
 
   WordRepository(
-      {WordDatabase? database,
-      WordDomain.WordValidator validator = const WordDomain.WordValidator()})
-      : _database = database ?? WordDatabase(),
+      {Db.WordDatabase? database,
+      WordValidator validator = const WordValidator()})
+      : _database = database ?? Db.WordDatabase(),
         _validator = validator;
 
   Stream<WordRepositoryEvent> get events async* {
     yield* _controller.stream;
   }
 
-  Future<List<WordDomain.Word>> findWords(WordsQuery wordsQuery) async {
+  Future<List<Word>> findWords(WordsQuery wordsQuery) async {
     final rows = await _database.transaction(() async {
       final wordsDbQuery = _database.selectOnly(_database.words)
         ..addColumns([_database.words.id])
@@ -56,10 +51,10 @@ class WordRepository {
     return Future.value(_createWords(rows));
   }
 
-  List<WordDomain.Word> _createWords(List<TypedResult> rows) {
+  List<Word> _createWords(List<TypedResult> rows) {
     List<int> ids = [];
-    Map<int, WordDomain.PartOfSpeech> partsOfSpeech = {};
-    Map<int, Map<WordDomain.WordFormType, String>> forms = {};
+    Map<int, PartOfSpeech> partsOfSpeech = {};
+    Map<int, Map<WordFormType, String>> forms = {};
     Map<int, Set<String>> usages = {};
     for (var row in rows) {
       var dbWord = row.readTable(_database.words);
@@ -69,15 +64,13 @@ class WordRepository {
 
       if (!partsOfSpeech.containsKey(wordId)) {
         ids.add(dbWord.id);
-        partsOfSpeech[wordId] =
-            find(WordDomain.PartOfSpeech.values, dbWord.partOfSpeech);
+        partsOfSpeech[wordId] = find(PartOfSpeech.values, dbWord.partOfSpeech);
 
         forms[wordId] = {};
         usages[wordId] = {};
       }
 
-      final wordFormType =
-          find(WordDomain.WordFormType.values, dbForm.formType);
+      final wordFormType = find(WordFormType.values, dbForm.formType);
       (forms[wordId]!)[wordFormType] = dbForm.value;
       if (dbUsage != null) {
         usages[wordId]?.add(dbUsage.value);
@@ -85,18 +78,15 @@ class WordRepository {
     }
 
     return ids
-        .map((id) => WordDomain.Word.withId(
+        .map((id) => Word.withId(
             id,
             partsOfSpeech[id]!,
-            forms[id]!
-                .entries
-                .map((e) => WordDomain.WordForm(e.key, e.value))
-                .toList(),
+            forms[id]!.entries.map((e) => WordForm(e.key, e.value)).toList(),
             usages[id]!.toList()))
         .toList();
   }
 
-  save(WordDomain.Word word) async {
+  save(Word word) async {
     final errors = _validator.validate(word);
     if (errors != null) {
       throw Exception("Word is invalid");
@@ -104,14 +94,14 @@ class WordRepository {
 
     await _database.transaction(() async {
       final wordId = await _database.into(_database.words).insert(
-          WordsCompanion(
+          Db.WordsCompanion(
               partOfSpeech: Value(_normalizeEnumName(word.partOfSpeech))));
 
       await _database.batch((batch) {
         batch.insertAll(
             _database.wordForms,
             word.forms
-                .map((form) => WordForm(
+                .map((form) => Db.WordForm(
                     formType: _normalizeEnumName(form.formType),
                     value: form.value,
                     wordId: wordId))
@@ -120,7 +110,7 @@ class WordRepository {
         batch.insertAll(
             _database.usages,
             word.usages
-                .map((value) => Usage(value: value, wordId: wordId))
+                .map((value) => Db.Usage(value: value, wordId: wordId))
                 .toList());
       });
     });
