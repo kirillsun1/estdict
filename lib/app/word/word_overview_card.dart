@@ -24,7 +24,7 @@ class WordOverviewCard extends StatelessWidget {
       },
       child: Padding(
         padding:
-            const EdgeInsets.only(top: 4.0, left: 15, right: 15, bottom: 4.0),
+            const EdgeInsets.only(top: 6.0, left: 18, right: 18, bottom: 6.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
