@@ -12,6 +12,10 @@ class FormsGroup {
       required this.infinitive,
       this.optionalForms = const []});
 
+  List<WordFormType> get allForms {
+    return [infinitive, ...optionalForms];
+  }
+
   String get name {
     return _names[id]!;
   }

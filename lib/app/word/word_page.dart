@@ -13,6 +13,8 @@ class WordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notEmptyFormsGroups = _collectNotEmptyFormsGroups();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(word.forms[primaryForm] ?? ""),
@@ -30,16 +32,13 @@ class WordPage extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          for (var group in word.partOfSpeech.groupedForms)
+          for (var formsGroup in notEmptyFormsGroups)
             Padding(
               padding: EdgeInsets.only(left: 18, right: 18),
-              child: Section(title: group.name, children: [
+              child: Section(title: formsGroup.name, children: [
                 Row(
                   children: [
-                    for (var formType in [
-                      group.infinitive,
-                      ...group.optionalForms
-                    ])
+                    for (var formType in formsGroup.allForms)
                       if (word.forms.containsKey(formType))
                         Chip(label: Text(word.forms[formType]!))
                   ],
@@ -48,13 +47,29 @@ class WordPage extends StatelessWidget {
             ),
           Padding(
             padding: EdgeInsets.only(left: 18, right: 18),
-            child: Section(
-              title: "Usages",
-              children: [for (var usage in word.usages) Text(usage)],
-            ),
-          )
+            child: word.usages.isNotEmpty
+                ? Section(
+                    title: "Usages",
+                    children: [
+                      for (var usage in word.usages) ...[
+                        Text(usage),
+                        SizedBox(height: 10)
+                      ]
+                    ],
+                  )
+                : Text("No usages added"),
+          ),
         ],
       ),
     );
+  }
+
+  List<FormsGroup> _collectNotEmptyFormsGroups() {
+    return word.partOfSpeech.groupedForms
+        .where((formsGroup) => formsGroup.allForms
+            .toSet()
+            .intersection(word.forms.keys.toSet())
+            .isNotEmpty)
+        .toList();
   }
 }
