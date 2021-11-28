@@ -39,7 +39,7 @@ class Usages extends Table {
 
 @DriftDatabase(tables: [Words, WordForms, Usages])
 class WordDatabase extends _$WordDatabase {
-  WordDatabase() : super(NativeDatabase.memory());
+  WordDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
