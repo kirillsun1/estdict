@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word/word_database.dart' as Db;
 
-enum WordRepositoryEvent { WORD_ADDED }
+enum WordRepositoryEvent { WORD_ADDED, WORD_CHANGED }
 
 class WordsQuery {
   final int maxResults;
@@ -78,8 +78,8 @@ class WordRepository {
     }
 
     return ids
-        .map((id) => Word.withId(
-            id, partsOfSpeech[id]!, forms[id]!, usages[id]!.toList()))
+        .map((id) =>
+            Word(id, partsOfSpeech[id]!, forms[id]!, usages[id]!.toList()))
         .toList();
   }
 
@@ -90,9 +90,21 @@ class WordRepository {
     }
 
     await _database.transaction(() async {
-      final wordId = await _database.into(_database.words).insert(
-          Db.WordsCompanion(
-              partOfSpeech: Value(_normalizeEnumName(word.partOfSpeech))));
+      final int wordId;
+      if (word.id != null) {
+        _database.delete(_database.wordForms)
+          ..where((dbWord) => dbWord.wordId.equals(word.id))
+          ..go();
+
+        _database.delete(_database.usages)
+          ..where((dbUsage) => dbUsage.wordId.equals(word.id))
+          ..go();
+
+        wordId = word.id!;
+      } else {
+        wordId = await _database.into(_database.words).insert(Db.WordsCompanion(
+            partOfSpeech: Value(_normalizeEnumName(word.partOfSpeech))));
+      }
 
       await _database.batch((batch) {
         batch.insertAll(
@@ -111,7 +123,9 @@ class WordRepository {
                 .toList());
       });
     });
-    _controller.add(WordRepositoryEvent.WORD_ADDED);
+    _controller.add(word.id == null
+        ? WordRepositoryEvent.WORD_ADDED
+        : WordRepositoryEvent.WORD_CHANGED);
   }
 
   void dispose() {

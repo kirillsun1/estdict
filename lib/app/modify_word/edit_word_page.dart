@@ -6,17 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'modify_word_view.dart';
 
-class CreateWordPage extends StatelessWidget {
-  final PartOfSpeech partOfSpeech;
+class EditWordPage extends StatelessWidget {
+  final Word word;
 
-  CreateWordPage({Key? key, required this.partOfSpeech}) : super(key: key);
+  EditWordPage({Key? key, required this.word}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => ModifyWordBloc(
-            ModifyWordState.newWord(partOfSpeech),
-            context.read<WordRepository>()),
+            ModifyWordState.existingWord(word), context.read<WordRepository>()),
         child: BlocListener<ModifyWordBloc, ModifyWordState>(
             listener: (context, state) {
               if (state.status == ModifyWordStatus.DONE) {

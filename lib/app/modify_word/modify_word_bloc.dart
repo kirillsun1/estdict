@@ -44,6 +44,7 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
     }
 
     emit(ModifyWordState(
+        id: state.id,
         partOfSpeech: state.partOfSpeech,
         forms: Map.unmodifiable(forms),
         usages: state.usages));
@@ -64,6 +65,7 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
     modifiableUsages[indexToChange] = event.value;
 
     emit(ModifyWordState(
+        id: state.id,
         partOfSpeech: state.partOfSpeech,
         forms: state.forms,
         usages: List.unmodifiable(modifiableUsages)));
@@ -72,6 +74,7 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
   Future<void> _onWordFinalized(
       WordFinalized event, Emitter<ModifyWordState> emit) async {
     emit(ModifyWordState(
+        id: state.id,
         partOfSpeech: state.partOfSpeech,
         forms: state.forms,
         usages: state.usages,
@@ -84,6 +87,7 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
     }
 
     emit(ModifyWordState(
+        id: state.id,
         partOfSpeech: state.partOfSpeech,
         forms: state.forms,
         usages: state.usages,

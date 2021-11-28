@@ -2,7 +2,7 @@ import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/domain/word.dart';
 
 Word createWord(ModifyWordState state) {
-  return Word(state.partOfSpeech, _createForms(state.forms),
+  return Word(state.id, state.partOfSpeech, _createForms(state.forms),
       _createUsages(state.usages));
 }
 

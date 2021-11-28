@@ -1,3 +1,4 @@
+import 'package:estdict/app/modify_word/edit_word_page.dart';
 import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
@@ -7,21 +8,24 @@ class WordPage extends StatelessWidget {
   final Word word;
   final WordFormType primaryForm;
 
-  const WordPage(
-      {Key? key, required this.word, this.primaryForm = WordFormType.EST_INF})
+  const WordPage({Key? key, required this.word, this.primaryForm = WordFormType.EST_INF})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final notEmptyFormsGroups = _collectNotEmptyFormsGroups();
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Word Details"),
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
+              openWordEditingDialog(context);
+            },
           )
         ],
       ),
@@ -49,6 +53,15 @@ class WordPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  openWordEditingDialog(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditWordPage(
+                  word: word,
+                )));
   }
 
   List<FormsGroup> _collectNotEmptyFormsGroups() {
@@ -148,14 +161,14 @@ class _Usages extends StatelessWidget {
       padding: EdgeInsets.only(left: 18, right: 18),
       child: word.usages.isNotEmpty
           ? Section(
-              title: "Usages",
-              children: [
-                for (var usage in word.usages) ...[
-                  Text(usage),
-                  SizedBox(height: 10)
-                ]
-              ],
-            )
+        title: "Usages",
+        children: [
+          for (var usage in word.usages) ...[
+            Text(usage),
+            SizedBox(height: 10)
+          ]
+        ],
+      )
           : Text("No usages added"),
     );
   }

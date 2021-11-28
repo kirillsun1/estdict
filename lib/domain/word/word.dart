@@ -7,13 +7,10 @@ class Word {
   final Map<WordFormType, String> forms;
   final List<String> usages;
 
-  Word(this.partOfSpeech, this.forms, [this.usages = const []]) : id = null;
-
-  Word.withId(int id, this.partOfSpeech, this.forms, [this.usages = const []])
-      : id = id;
+  Word(this.id, this.partOfSpeech, this.forms, [this.usages = const []]);
 
   @override
   String toString() {
-    return 'Word{partOfSpeech: $partOfSpeech, forms: $forms, usages: $usages}';
+    return 'Word{id: $id, partOfSpeech: $partOfSpeech, forms: $forms, usages: $usages}';
   }
 }
