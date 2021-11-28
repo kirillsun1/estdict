@@ -1,12 +1,10 @@
-import 'package:estdict/app/home/background.dart';
 import 'package:estdict/app/home/home_page_bloc.dart';
-import 'package:estdict/app/home/welcome_bar.dart';
+import 'package:estdict/app/home/welcome_tab.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'create_word_buttons.dart';
-import 'last_added_words.dart';
+import 'search_words_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,34 +18,31 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HomePageView extends StatelessWidget {
+class _HomePageView extends StatefulWidget {
   const _HomePageView({Key? key}) : super(key: key);
 
   @override
+  State<_HomePageView> createState() => _HomePageViewState();
+}
+
+class _HomePageViewState extends State<_HomePageView> {
+  static const List<Widget> _tabs = [WelcomeTab(), SearchWordsTab()];
+  int _currentPageIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Background(
-      child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).padding.top,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              WelcomeBar(),
-              SizedBox(
-                height: 30,
-              ),
-              LastAddedWords(),
-              SizedBox(
-                height: 30,
-              ),
-              CreateWordButtons()
-            ],
-          )),
+    return Scaffold(
+      body: _tabs[_currentPageIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentPageIndex,
+        onTap: (value) => setState(() {
+          _currentPageIndex = value;
+        }),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "All")
+        ],
+      ),
     );
   }
 }
