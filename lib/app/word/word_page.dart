@@ -1,4 +1,5 @@
 import 'package:estdict/app/modify_word/edit_word_page.dart';
+import 'package:estdict/components/error_message.dart';
 import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
@@ -45,15 +46,20 @@ class _WordPageView extends StatelessWidget {
             ],
           ),
           body: state.loading
-              ? Padding(
-                  padding: EdgeInsets.all(10),
-                  child: CircularProgressIndicator())
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator()),
+                  ],
+                )
               : state.word != null
                   ? _WordPageBody(
                       word: state.word!,
                       primaryForm: primaryForm,
                     )
-                  : Text("Error"));
+                  : ErrorMessage());
     });
   }
 
