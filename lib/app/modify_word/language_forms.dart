@@ -1,12 +1,13 @@
-import 'package:estdict/app/modify_word/modify_word_bloc.dart';
-import 'package:estdict/app/modify_word/modify_word_state.dart';
-import 'package:estdict/app/modify_word/text_field.dart';
 import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word/word_form_type.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'modify_word_bloc.dart';
+import 'modify_word_state.dart';
+import 'text_field.dart';
 
 class LanguageForms extends StatelessWidget {
   final FormsGroup group;

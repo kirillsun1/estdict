@@ -12,8 +12,15 @@ class WordPageState {
       : loading = false,
         word = null;
 
-  WordPageState(
+  WordPageState._(
       {required this.wordId, required this.loading, required this.word});
+
+  WordPageState copyWith({int? wordId, bool? loading, Word? word}) {
+    return WordPageState._(
+        wordId: wordId != null ? wordId : this.wordId,
+        loading: loading != null ? loading : this.loading,
+        word: word != null ? word : this.word);
+  }
 }
 
 abstract class WordPageEvent {}
@@ -38,11 +45,11 @@ class WordPageBloc extends Bloc<WordPageEvent, WordPageState> {
   void _onWordRequested(
       WordRequested event, Emitter<WordPageState> emit) async {
     try {
-      emit(WordPageState(wordId: state.wordId, loading: true, word: null));
+      emit(state.copyWith(loading: true));
       final word = await _wordRepository.findWordById(state.wordId);
-      emit(WordPageState(wordId: state.wordId, loading: false, word: word));
+      emit(state.copyWith(loading: false, word: word));
     } catch (e) {
-      emit(WordPageState(wordId: state.wordId, loading: false, word: null));
+      emit(state.copyWith(loading: false, word: null));
     }
   }
 

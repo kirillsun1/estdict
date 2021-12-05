@@ -1,10 +1,11 @@
 import 'package:estdict/app/modify_word/edit_word_page.dart';
-import 'package:estdict/app/word/word_page_bloc.dart';
 import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'word_page_bloc.dart';
 
 class WordPage extends StatelessWidget {
   final int wordId;

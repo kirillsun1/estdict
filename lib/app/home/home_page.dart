@@ -1,10 +1,10 @@
-import 'package:estdict/app/home/home_page_bloc.dart';
-import 'package:estdict/app/home/welcome_tab.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'home_page_bloc.dart';
 import 'search_words_tab.dart';
+import 'welcome_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

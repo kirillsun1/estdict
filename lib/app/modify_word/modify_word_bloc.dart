@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:estdict/app/modify_word/modify_word_state.dart';
-import 'package:estdict/app/modify_word/word_converter.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word/word_validator.dart';
+
+import 'modify_word_state.dart';
+import 'word_converter.dart';
 
 abstract class ModifyWordEvent {}
 
@@ -43,11 +44,7 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
       forms[event.type] = event.value!;
     }
 
-    emit(ModifyWordState(
-        id: state.id,
-        partOfSpeech: state.partOfSpeech,
-        forms: Map.unmodifiable(forms),
-        usages: state.usages));
+    emit(state.copyWith(forms: Map.unmodifiable(forms)));
   }
 
   void _onUsageModified(UsageModified event, Emitter<ModifyWordState> emit) {
@@ -64,21 +61,12 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
     }
     modifiableUsages[indexToChange] = event.value;
 
-    emit(ModifyWordState(
-        id: state.id,
-        partOfSpeech: state.partOfSpeech,
-        forms: state.forms,
-        usages: List.unmodifiable(modifiableUsages)));
+    emit(state.copyWith(usages: List.unmodifiable(modifiableUsages)));
   }
 
   Future<void> _onWordFinalized(
       WordFinalized event, Emitter<ModifyWordState> emit) async {
-    emit(ModifyWordState(
-        id: state.id,
-        partOfSpeech: state.partOfSpeech,
-        forms: state.forms,
-        usages: state.usages,
-        status: ModifyWordStatus.LOADING));
+    emit(state.copyWith(status: ModifyWordStatus.LOADING));
 
     final word = createWord(state);
     final errors = _wordValidator.validate(word);
@@ -86,11 +74,7 @@ class ModifyWordBloc extends Bloc<ModifyWordEvent, ModifyWordState> {
       await _wordRepository.save(word);
     }
 
-    emit(ModifyWordState(
-        id: state.id,
-        partOfSpeech: state.partOfSpeech,
-        forms: state.forms,
-        usages: state.usages,
+    emit(state.copyWith(
         errors: errors,
         status: errors == null
             ? ModifyWordStatus.DONE

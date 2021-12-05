@@ -1,9 +1,9 @@
-import 'package:estdict/app/home/home_page_block.dart';
 import 'package:estdict/app/word/word_overview_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'home_page_bloc.dart';
+import 'home_page_block.dart';
 
 class LastAddedWords extends StatelessWidget {
   const LastAddedWords({Key? key}) : super(key: key);
@@ -43,14 +43,14 @@ class LastAddedWords extends StatelessWidget {
                         )),
                         SizedBox(height: 10),
                         HomePageBlock(
-                                narrow: true,
-                                child: Column(
-                                  children: [
-                                    ...state.words
+                            narrow: true,
+                            child: Column(
+                              children: [
+                                ...state.words
                                     .map((word) => WordOverviewCard(word: word))
                               ],
-                                ))
-                          ]
+                            ))
+                      ]
                     ],
                   ),
                 )

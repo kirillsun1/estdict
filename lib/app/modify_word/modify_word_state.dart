@@ -37,4 +37,21 @@ class ModifyWordState {
   bool get isEditMode {
     return this.id != null;
   }
+
+  ModifyWordState copyWith(
+      {int? id,
+      PartOfSpeech? partOfSpeech,
+      Map<WordFormType, String>? forms,
+      List<String?>? usages,
+      ModifyWordStatus? status,
+      WordValidationErrors? errors}) {
+    return ModifyWordState(
+      id: id != null ? id : this.id,
+      partOfSpeech: partOfSpeech != null ? partOfSpeech : this.partOfSpeech,
+      forms: forms != null ? forms : this.forms,
+      usages: usages != null ? usages : this.usages,
+      status: status != null ? status : this.status,
+      errors: errors != null ? errors : this.errors,
+    );
+  }
 }

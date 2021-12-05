@@ -1,7 +1,8 @@
-import 'package:estdict/app/word/word_page.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import 'word_page.dart';
 
 class WordOverviewCard extends StatelessWidget {
   final Word word;

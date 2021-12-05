@@ -1,9 +1,10 @@
-import 'package:estdict/app/home/home_page_block.dart';
-import 'package:estdict/app/home/search_words_bloc.dart';
 import 'package:estdict/app/word/word_page.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'home_page_block.dart';
+import 'search_words_bloc.dart';
 
 class SearchWordsTab extends StatelessWidget {
   const SearchWordsTab({Key? key}) : super(key: key);

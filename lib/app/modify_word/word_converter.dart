@@ -1,5 +1,6 @@
-import 'package:estdict/app/modify_word/modify_word_state.dart';
 import 'package:estdict/domain/word.dart';
+
+import 'modify_word_state.dart';
 
 Word createWord(ModifyWordState state) {
   return Word(state.id, state.partOfSpeech, _createForms(state.forms),
