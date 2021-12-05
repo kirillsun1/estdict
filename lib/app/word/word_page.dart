@@ -1,67 +1,103 @@
 import 'package:estdict/app/modify_word/edit_word_page.dart';
+import 'package:estdict/app/word/word_page_bloc.dart';
 import 'package:estdict/components/section.dart';
 import 'package:estdict/domain/word.dart';
 import 'package:estdict/domain/word_configuration/word_forms_configuration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WordPage extends StatelessWidget {
-  final Word word;
+  final int wordId;
+
+  const WordPage({Key? key, required this.wordId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => WordPageBloc(context.read<WordRepository>(), wordId)
+        ..add(WordRequested()),
+      child: _WordPageView(),
+    );
+  }
+}
+
+class _WordPageView extends StatelessWidget {
   final WordFormType primaryForm;
 
-  const WordPage({Key? key, required this.word, this.primaryForm = WordFormType.EST_INF})
+  const _WordPageView({Key? key, this.primaryForm = WordFormType.EST_INF})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final notEmptyFormsGroups = _collectNotEmptyFormsGroups();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Word Details"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-              openWordEditingDialog(context);
-            },
-          )
-        ],
-      ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 20,
+    return BlocBuilder<WordPageBloc, WordPageState>(builder: (context, state) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text("Word Details"),
+            actions: [
+              if (state.word != null)
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    openWordEditingDialog(context, state.word!);
+                  },
+                )
+            ],
           ),
-          _Header(word: word, primaryForm: primaryForm),
-          SizedBox(
-            height: 20,
-          ),
-          for (var formGroup in notEmptyFormsGroups) ...[
-            Container(
-                padding: EdgeInsets.only(left: 18, right: 18),
-                child: _WordFormGroup(formGroup: formGroup, word: word)),
-            SizedBox(
-              height: 10,
-            )
-          ],
-          SizedBox(
-            height: 20,
-          ),
-          _Usages(word: word),
-        ],
-      ),
-    );
+          body: state.loading
+              ? Padding(
+                  padding: EdgeInsets.all(10),
+                  child: CircularProgressIndicator())
+              : state.word != null
+                  ? _WordPageBody(
+                      word: state.word!,
+                      primaryForm: primaryForm,
+                    )
+                  : Text("Error"));
+    });
   }
 
-  openWordEditingDialog(BuildContext context) {
+  openWordEditingDialog(BuildContext context, Word word) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => EditWordPage(
                   word: word,
                 )));
+  }
+}
+
+class _WordPageBody extends StatelessWidget {
+  final Word word;
+  final WordFormType primaryForm;
+
+  const _WordPageBody({Key? key, required this.word, required this.primaryForm})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        SizedBox(
+          height: 20,
+        ),
+        _Header(word: word, primaryForm: primaryForm),
+        SizedBox(
+          height: 20,
+        ),
+        for (var formGroup in _collectNotEmptyFormsGroups()) ...[
+          Container(
+              padding: EdgeInsets.only(left: 18, right: 18),
+              child: _WordFormGroup(formGroup: formGroup, word: word)),
+          SizedBox(
+            height: 10,
+          )
+        ],
+        SizedBox(
+          height: 20,
+        ),
+        _Usages(word: word),
+      ],
+    );
   }
 
   List<FormsGroup> _collectNotEmptyFormsGroups() {
@@ -161,14 +197,14 @@ class _Usages extends StatelessWidget {
       padding: EdgeInsets.only(left: 18, right: 18),
       child: word.usages.isNotEmpty
           ? Section(
-        title: "Usages",
-        children: [
-          for (var usage in word.usages) ...[
-            Text(usage),
-            SizedBox(height: 10)
-          ]
-        ],
-      )
+              title: "Usages",
+              children: [
+                for (var usage in word.usages) ...[
+                  Text(usage),
+                  SizedBox(height: 10)
+                ]
+              ],
+            )
           : Text("No usages added"),
     );
   }

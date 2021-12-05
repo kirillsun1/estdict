@@ -56,10 +56,7 @@ class WordOverviewCard extends StatelessWidget {
   }
 
   openWordOverviewPage(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                WordPage(word: word, primaryForm: primaryForm)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => WordPage(wordId: word.id!)));
   }
 }

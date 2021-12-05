@@ -82,10 +82,7 @@ class _SearchWordsTabView extends StatelessWidget {
   }
 
   openWordOverviewPage(BuildContext context, Word word) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                WordPage(word: word, primaryForm: primaryForm)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => WordPage(wordId: word.id!)));
   }
 }

@@ -15,7 +15,7 @@ class WordsQuery {
 class WordRepository {
   final Db.WordDatabase _database;
   final WordValidator _validator;
-  final _controller = StreamController<WordRepositoryEvent>();
+  final _controller = StreamController<WordRepositoryEvent>.broadcast();
 
   WordRepository(
       {Db.WordDatabase? database,
@@ -25,6 +25,26 @@ class WordRepository {
 
   Stream<WordRepositoryEvent> get events async* {
     yield* _controller.stream;
+  }
+
+  Future<Word?> findWordById(int id) async {
+    final rows = await _database.transaction(() async {
+      final allDataDbQuery = _database.select(_database.words).join([
+        innerJoin(_database.wordForms,
+            _database.wordForms.wordId.equalsExp(_database.words.id)),
+        leftOuterJoin(_database.usages,
+            _database.usages.wordId.equalsExp(_database.words.id))
+      ])
+        ..where(_database.words.id.equals(id));
+
+      return await allDataDbQuery.get();
+    });
+    var words = _createWords(rows);
+    assert(words.length < 2, "Expected to get max 1 word");
+    if (words.length == 1) {
+      return words[0];
+    }
+    return null;
   }
 
   Future<List<Word>> findWords(WordsQuery wordsQuery) async {
